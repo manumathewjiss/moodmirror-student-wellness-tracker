@@ -93,6 +93,17 @@ models/bert_checkpoints/
 models/roberta_emotion_model/
 models/roberta_emotion_model_3class/
 
+# Backend model artifacts (very large)
+backend/models/
+
+# Legacy large artifacts
+legacy/models/
+legacy/data/
+legacy/results/
+legacy/*.pdf
+legacy/*.pptx
+legacy/*.zip
+
 # ============================================================================
 # Results & Outputs (Can be Regenerated)
 # ============================================================================
