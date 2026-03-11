@@ -17,8 +17,12 @@ class EmotionPrediction:
 
 
 class EmotionClassifier:
-    def __init__(self, model_dir: Path, mapping_path: Path, max_length: int = 128) -> None:
-        self.model_dir = model_dir
+    def __init__(self, model_source: str, mapping_path: Path, max_length: int = 128) -> None:
+        """
+        model_source: either a local directory path or a HuggingFace Hub repo ID
+                      (e.g. "yourname/moodmirror-roberta").
+        """
+        self.model_source = model_source
         self.mapping_path = mapping_path
         self.max_length = max_length
 
@@ -35,8 +39,8 @@ class EmotionClassifier:
         self._id_to_label = {int(k): v for k, v in mapping["id_to_emotion"].items()}
 
     def _load_model(self) -> None:
-        self._tokenizer = AutoTokenizer.from_pretrained(str(self.model_dir))
-        self._model = AutoModelForSequenceClassification.from_pretrained(str(self.model_dir))
+        self._tokenizer = AutoTokenizer.from_pretrained(self.model_source)
+        self._model = AutoModelForSequenceClassification.from_pretrained(self.model_source)
         self._model.to(self._device)
         self._model.eval()
 

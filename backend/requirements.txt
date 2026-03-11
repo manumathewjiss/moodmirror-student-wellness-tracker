@@ -1,5 +1,6 @@
 fastapi
 uvicorn[standard]
+pydantic[email]
 pydantic-settings
 python-dotenv
 
@@ -10,4 +11,5 @@ psycopg[binary]
 torch
 transformers
 safetensors
+huggingface-hub
 openai

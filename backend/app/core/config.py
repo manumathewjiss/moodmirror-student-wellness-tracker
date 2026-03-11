@@ -20,6 +20,10 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/moodmirror"
 
+    # Set EMOTION_MODEL_HUB_ID to a HuggingFace Hub repo (e.g. "yourname/moodmirror-roberta")
+    # to load the model from the Hub instead of a local directory.
+    emotion_model_hub_id: str | None = None
+
     # Paths are resolved relative to the backend folder (CWD when running uvicorn).
     emotion_model_dir: str = "models/roberta_emotion_model_3class"
     emotion_mapping_path: str = "app/assets/emotion_mapping_3class.json"
@@ -30,8 +34,14 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> List[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
+    def emotion_model_source(self) -> str:
+        """Returns HF Hub model ID if set, otherwise the resolved local path string."""
+        if self.emotion_model_hub_id:
+            return self.emotion_model_hub_id
+        p = Path(self.emotion_model_dir)
+        return str(p if p.is_absolute() else (Path.cwd() / p).resolve())
+
     def emotion_model_path(self) -> Path:
-        # Allow both absolute paths and repo-relative paths.
         p = Path(self.emotion_model_dir)
         return p if p.is_absolute() else (Path.cwd() / p).resolve()
 

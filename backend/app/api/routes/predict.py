@@ -27,21 +27,26 @@ class PredictResponse(BaseModel):
 
 
 @lru_cache(maxsize=1)
-def _get_classifier_cached(model_dir: str, mapping_path: str) -> EmotionClassifier:
+def _get_classifier_cached(model_source: str, mapping_path: str) -> EmotionClassifier:
     from pathlib import Path
 
-    model_p = Path(model_dir)
     mapping_p = Path(mapping_path)
-    if not model_p.exists():
-        raise FileNotFoundError(f"Model directory not found: {model_p}")
     if not mapping_p.exists():
         raise FileNotFoundError(f"Mapping file not found: {mapping_p}")
-    return EmotionClassifier(model_dir=model_p, mapping_path=mapping_p)
+
+    # If model_source looks like a local path, verify it exists before loading.
+    import os
+    if os.sep in model_source or model_source.startswith("."):
+        model_p = Path(model_source)
+        if not model_p.exists():
+            raise FileNotFoundError(f"Model directory not found: {model_p}")
+
+    return EmotionClassifier(model_source=model_source, mapping_path=mapping_p)
 
 
 def get_classifier(settings: Settings = Depends(get_settings)) -> EmotionClassifier:
     return _get_classifier_cached(
-        model_dir=str(settings.emotion_model_path()),
+        model_source=settings.emotion_model_source(),
         mapping_path=str(settings.emotion_mapping_file()),
     )
 
