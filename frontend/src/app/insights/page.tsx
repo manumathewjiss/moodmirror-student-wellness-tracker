@@ -218,9 +218,9 @@ export default function InsightsPage() {
                         borderRadius: "8px",
                         color: "#f1f5f9",
                       }}
-                      formatter={(value: number) => [
+                      formatter={(value: number | undefined) => [
                         value === 1 ? "Positive" : value === -1 ? "Negative" : "Neutral",
-                        value,
+                        value ?? 0,
                       ]}
                       labelFormatter={(_, payload) => payload[0]?.payload?.date}
                     />
