@@ -34,9 +34,10 @@ def _get_classifier_cached(model_source: str, mapping_path: str) -> EmotionClass
     if not mapping_p.exists():
         raise FileNotFoundError(f"Mapping file not found: {mapping_p}")
 
-    # If model_source looks like a local path, verify it exists before loading.
-    import os
-    if os.sep in model_source or model_source.startswith("."):
+    # Detect local paths: must be absolute, or start with "./" or "../"
+    # HuggingFace Hub IDs like "username/model-name" are NOT local paths.
+    is_local = model_source.startswith("/") or model_source.startswith(".")
+    if is_local:
         model_p = Path(model_source)
         if not model_p.exists():
             raise FileNotFoundError(f"Model directory not found: {model_p}")
