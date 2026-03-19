@@ -75,6 +75,9 @@ def create_mood_entry(
         source=payload.source,
         label=prediction.label,
         confidence=prediction.confidence,
+        prob_positive=prediction.probabilities.get("positive"),
+        prob_neutral=prediction.probabilities.get("neutral"),
+        prob_negative=prediction.probabilities.get("negative"),
     )
     db.add(entry)
     db.commit()
@@ -155,6 +158,9 @@ def create_diary_mood_entry(
         source="diary",
         label=best_label,
         confidence=best_confidence,
+        prob_positive=blended.get("positive"),
+        prob_neutral=blended.get("neutral"),
+        prob_negative=blended.get("negative"),
     )
     db.add(entry)
     db.commit()

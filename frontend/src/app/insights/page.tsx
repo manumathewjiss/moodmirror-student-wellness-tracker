@@ -29,11 +29,73 @@ type MoodEntry = {
   confidence: number;
 };
 
+type PatternInsights = {
+  has_sufficient_data: boolean;
+  total_entries: number;
+  trend: {
+    direction: string;
+    slope: number | null;
+    message: string;
+  };
+  weekly_rhythm: {
+    scores: Record<string, number>;
+    best_day: string | null;
+    worst_day: string | null;
+  };
+  volatility: {
+    level: string;
+    score: number | null;
+    mood_switches: number;
+    message: string;
+  };
+  transitions: {
+    matrix: Record<string, Record<string, number>>;
+    next_day_prediction: string | null;
+    next_day_confidence: number | null;
+  };
+  keyword_correlations: Array<{
+    keyword: string;
+    avg_score: number;
+    count: number;
+    association: string;
+  }>;
+  streaks: {
+    logging_streak: number;
+    current_positive_streak: number;
+    longest_positive_streak: number;
+  };
+  insights: string[];
+};
+
 function moodToScore(label: string): number {
   const l = label?.toLowerCase();
   if (l === "positive") return 1;
   if (l === "negative") return -1;
   return 0;
+}
+
+function TrendIcon({ direction }: { direction: string }) {
+  if (direction === "improving") return <span className="text-emerald-400 text-xl">↑</span>;
+  if (direction === "declining") return <span className="text-red-400 text-xl">↓</span>;
+  return <span className="text-slate-400 text-xl">→</span>;
+}
+
+function trendColor(direction: string) {
+  if (direction === "improving") return "text-emerald-400";
+  if (direction === "declining") return "text-red-400";
+  return "text-slate-400";
+}
+
+function volatilityColor(level: string) {
+  if (level === "low") return "text-emerald-400";
+  if (level === "high") return "text-red-400";
+  return "text-amber-400";
+}
+
+function predictionColor(label: string | null) {
+  if (label === "positive") return "text-emerald-400";
+  if (label === "negative") return "text-red-400";
+  return "text-slate-400";
 }
 
 export default function InsightsPage() {
@@ -43,6 +105,8 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [range, setRange] = useState<"7" | "14" | "30">("14");
+  const [patterns, setPatterns] = useState<PatternInsights | null>(null);
+  const [patternsLoading, setPatternsLoading] = useState(true);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null;
@@ -64,6 +128,16 @@ export default function InsightsPage() {
       })
       .catch(() => setError("Failed to load data"))
       .finally(() => setLoading(false));
+  }, [username]);
+
+  useEffect(() => {
+    if (!username) return;
+    setPatternsLoading(true);
+    fetch(`${API_BASE}/api/v1/insights?username=${encodeURIComponent(username)}&limit=60`)
+      .then((res) => res.json())
+      .then((data) => setPatterns(data))
+      .catch(() => setPatterns(null))
+      .finally(() => setPatternsLoading(false));
   }, [username]);
 
   const days = parseInt(range, 10);
@@ -155,12 +229,15 @@ export default function InsightsPage() {
 
   if (!username) return null;
 
+  const positiveKeywords = patterns?.keyword_correlations.filter((k) => k.association === "positive").slice(0, 8) ?? [];
+  const negativeKeywords = patterns?.keyword_correlations.filter((k) => k.association === "negative").slice(0, 8) ?? [];
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground mb-1">Insights</h1>
-          <p className="text-foreground-muted text-sm">Mood trends and patterns from your entries.</p>
+          <p className="text-foreground-muted text-sm">Mood patterns and analysis from your entries.</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-foreground-muted text-sm">Last</span>
@@ -191,6 +268,175 @@ export default function InsightsPage() {
 
       {!loading && !error && filteredEntries.length > 0 && (
         <div className="space-y-8">
+
+          {/* ── Pattern Engine Section ── */}
+          {patternsLoading ? (
+            <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
+              <p className="text-foreground-muted text-sm">Analysing your patterns...</p>
+            </div>
+          ) : patterns && !patterns.has_sufficient_data ? (
+            <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-5 flex items-start gap-3">
+              <span className="text-2xl mt-0.5">🔒</span>
+              <div>
+                <p className="text-foreground font-medium text-sm">Deeper insights unlock soon</p>
+                <p className="text-foreground-muted text-sm mt-0.5">
+                  Keep logging — pattern analysis becomes available after a few more entries.
+                </p>
+              </div>
+            </div>
+          ) : patterns ? (
+            <div className="space-y-6">
+
+              {/* AI insight cards */}
+              {patterns.insights.length > 0 && (
+                <section>
+                  <h2 className="text-lg font-semibold text-foreground mb-3">What your data says</h2>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {patterns.insights.map((insight, i) => (
+                      <div
+                        key={i}
+                        className="rounded-xl border border-midnight-lighter bg-midnight-light px-4 py-3 flex items-start gap-3"
+                      >
+                        <span className="text-sunburst text-lg mt-0.5">✦</span>
+                        <p className="text-foreground text-sm leading-relaxed">{insight}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Stats row: streaks + trend */}
+              <section>
+                <h2 className="text-lg font-semibold text-foreground mb-3">At a glance</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-4 text-center">
+                    <p className="text-3xl font-bold text-sunburst">{patterns.streaks.logging_streak}</p>
+                    <p className="text-foreground-muted text-xs mt-1">Day logging streak</p>
+                  </div>
+                  <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-4 text-center">
+                    <p className="text-3xl font-bold text-emerald-400">{patterns.streaks.current_positive_streak}</p>
+                    <p className="text-foreground-muted text-xs mt-1">Positive streak</p>
+                  </div>
+                  <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-4 text-center">
+                    <p className="text-3xl font-bold text-emerald-400">{patterns.streaks.longest_positive_streak}</p>
+                    <p className="text-foreground-muted text-xs mt-1">Longest positive ever</p>
+                  </div>
+                  <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-4 text-center">
+                    <p className="text-3xl font-bold text-foreground">{patterns.total_entries}</p>
+                    <p className="text-foreground-muted text-xs mt-1">Total entries</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Trend + Volatility + Prediction */}
+              <section className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-5">
+                  <p className="text-foreground-muted text-xs uppercase tracking-wide mb-2">Overall trend</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <TrendIcon direction={patterns.trend.direction} />
+                    <p className={`text-lg font-bold capitalize ${trendColor(patterns.trend.direction)}`}>
+                      {patterns.trend.direction === "insufficient_data" ? "Not enough data" : patterns.trend.direction}
+                    </p>
+                  </div>
+                  <p className="text-foreground-muted text-xs leading-relaxed">{patterns.trend.message}</p>
+                </div>
+
+                <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-5">
+                  <p className="text-foreground-muted text-xs uppercase tracking-wide mb-2">Mood stability</p>
+                  <p className={`text-lg font-bold capitalize mb-1 ${volatilityColor(patterns.volatility.level)}`}>
+                    {patterns.volatility.level === "insufficient_data" ? "Not enough data" : patterns.volatility.level}
+                  </p>
+                  <p className="text-foreground-muted text-xs leading-relaxed">{patterns.volatility.message}</p>
+                  {patterns.volatility.mood_switches > 0 && (
+                    <p className="text-foreground-muted text-xs mt-1">{patterns.volatility.mood_switches} mood switches</p>
+                  )}
+                </div>
+
+                <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-5">
+                  <p className="text-foreground-muted text-xs uppercase tracking-wide mb-2">Tomorrow&apos;s prediction</p>
+                  {patterns.transitions.next_day_prediction ? (
+                    <>
+                      <p className={`text-lg font-bold capitalize mb-1 ${predictionColor(patterns.transitions.next_day_prediction)}`}>
+                        {patterns.transitions.next_day_prediction}
+                      </p>
+                      <p className="text-foreground-muted text-xs">
+                        {Math.round((patterns.transitions.next_day_confidence ?? 0) * 100)}% confidence based on your patterns
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-foreground-muted text-xs">Not enough data yet for prediction.</p>
+                  )}
+                </div>
+              </section>
+
+              {/* Weekly rhythm best/worst day */}
+              {(patterns.weekly_rhythm.best_day || patterns.weekly_rhythm.worst_day) && (
+                <section className="grid gap-3 sm:grid-cols-2">
+                  {patterns.weekly_rhythm.best_day && (
+                    <div className="rounded-xl border border-emerald-800/40 bg-emerald-900/20 p-5">
+                      <p className="text-emerald-400 text-xs uppercase tracking-wide mb-1">Your best day</p>
+                      <p className="text-2xl font-bold text-foreground">{patterns.weekly_rhythm.best_day}</p>
+                      <p className="text-foreground-muted text-xs mt-1">You tend to feel most positive on this day.</p>
+                    </div>
+                  )}
+                  {patterns.weekly_rhythm.worst_day && (
+                    <div className="rounded-xl border border-red-800/40 bg-red-900/20 p-5">
+                      <p className="text-red-400 text-xs uppercase tracking-wide mb-1">Your toughest day</p>
+                      <p className="text-2xl font-bold text-foreground">{patterns.weekly_rhythm.worst_day}</p>
+                      <p className="text-foreground-muted text-xs mt-1">You tend to feel lower on this day.</p>
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {/* Keyword triggers */}
+              {(positiveKeywords.length > 0 || negativeKeywords.length > 0) && (
+                <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
+                  <h2 className="text-lg font-semibold text-foreground mb-1">Your personal triggers</h2>
+                  <p className="text-foreground-muted text-sm mb-5">
+                    Words that consistently appear on your good or bad days.
+                  </p>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {positiveKeywords.length > 0 && (
+                      <div>
+                        <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wide mb-3">Lifts your mood</p>
+                        <div className="flex flex-wrap gap-2">
+                          {positiveKeywords.map((kw) => (
+                            <span
+                              key={kw.keyword}
+                              className="inline-flex items-center gap-1.5 rounded-full bg-emerald-900/40 border border-emerald-700/40 px-3 py-1 text-sm text-emerald-300"
+                            >
+                              {kw.keyword}
+                              <span className="text-emerald-500 text-xs">{kw.count}×</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {negativeKeywords.length > 0 && (
+                      <div>
+                        <p className="text-red-400 text-xs font-semibold uppercase tracking-wide mb-3">Brings you down</p>
+                        <div className="flex flex-wrap gap-2">
+                          {negativeKeywords.map((kw) => (
+                            <span
+                              key={kw.keyword}
+                              className="inline-flex items-center gap-1.5 rounded-full bg-red-900/40 border border-red-700/40 px-3 py-1 text-sm text-red-300"
+                            >
+                              {kw.keyword}
+                              <span className="text-red-500 text-xs">{kw.count}×</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+
+            </div>
+          ) : null}
+
+          {/* ── Existing Charts ── */}
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
             <h2 className="text-lg font-semibold text-foreground mb-1">Mood trend line</h2>
             <p className="text-foreground-muted text-sm mb-4">
@@ -282,7 +528,7 @@ export default function InsightsPage() {
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
             <h2 className="text-lg font-semibold text-foreground mb-1">Day of week</h2>
             <p className="text-foreground-muted text-sm mb-4">
-              Number of entries by weekday (e.g. do you log more on weekends?).
+              Number of entries by weekday — showing how your mood distributes across the week.
             </p>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">

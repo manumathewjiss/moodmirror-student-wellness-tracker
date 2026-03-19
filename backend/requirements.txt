@@ -13,3 +13,4 @@ transformers
 safetensors
 huggingface-hub
 openai
+numpy
