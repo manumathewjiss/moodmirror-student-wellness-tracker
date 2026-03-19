@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic[email]
+pydantic-settings
+python-dotenv
+
+SQLAlchemy
+alembic
+psycopg[binary]
+
+torch
+transformers
+safetensors
+huggingface-hub
+openai
+numpy
