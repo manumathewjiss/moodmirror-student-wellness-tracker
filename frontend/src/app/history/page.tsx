@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { API_BASE } from "@/lib/api-config";
-import { formatApiErrorBody } from "@/lib/api-error";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
 type MoodEntry = {
   id: string;
@@ -31,22 +30,12 @@ export default function HistoryPage() {
     setLoading(true);
     setError(null);
     fetch(`${API_BASE}/api/v1/mood-entries?username=${encodeURIComponent(username)}&limit=50`)
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-          const msg = formatApiErrorBody(data);
-          setError(
-            res.status === 404
-              ? `${msg} On localhost, your account only exists if you signed up here — production and local databases are separate.`
-              : msg
-          );
-          setEntries([]);
-          return;
-        }
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data)) setEntries(data);
         else setEntries([]);
       })
-      .catch(() => setError("Failed to load history (is the API running on the URL in .env.local?)"))
+      .catch(() => setError("Failed to load history"))
       .finally(() => setLoading(false));
   }, [username]);
 

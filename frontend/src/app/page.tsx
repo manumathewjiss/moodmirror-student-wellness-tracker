@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { API_BASE } from "@/lib/api-config";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
 /** Accepts standard email pattern: local@domain.tld (e.g. user@example.com, name@mail.co.in) */
 function isValidEmail(value: string): boolean {
@@ -87,18 +87,7 @@ export default function HomePage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        const detail =
-          typeof data.detail === "string"
-            ? data.detail
-            : Array.isArray(data.detail)
-              ? data.detail.map((x: { msg?: string }) => x.msg).join(" ")
-              : "Login failed";
-        if (res.status === 404 || /not found/i.test(detail)) {
-          throw new Error(
-            "No account with this username here. Use Sign up to create one on this device, or your username only exists on the deployed site (different database)."
-          );
-        }
-        throw new Error(detail);
+        throw new Error(data.detail ?? "Login failed");
       }
       setCurrentUser(data);
       if (typeof window !== "undefined") {

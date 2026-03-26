@@ -17,8 +17,7 @@ import {
   Legend,
 } from "recharts";
 
-import { API_BASE } from "@/lib/api-config";
-import { formatApiErrorBody } from "@/lib/api-error";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
 type MoodEntry = {
   id: string;
@@ -122,22 +121,12 @@ export default function InsightsPage() {
     setLoading(true);
     setError(null);
     fetch(`${API_BASE}/api/v1/mood-entries?username=${encodeURIComponent(username)}&limit=200`)
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-          const msg = formatApiErrorBody(data);
-          setError(
-            res.status === 404
-              ? `${msg} On localhost, sign up again here — local and production databases are separate.`
-              : msg
-          );
-          setEntries([]);
-          return;
-        }
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data)) setEntries(data);
         else setEntries([]);
       })
-      .catch(() => setError("Failed to load entries (is the API running and NEXT_PUBLIC_API_BASE_URL correct?)"))
+      .catch(() => setError("Failed to load data"))
       .finally(() => setLoading(false));
   }, [username]);
 
@@ -145,15 +134,7 @@ export default function InsightsPage() {
     if (!username) return;
     setPatternsLoading(true);
     fetch(`${API_BASE}/api/v1/insights?username=${encodeURIComponent(username)}&limit=60`)
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) return null;
-        // Ignore FastAPI error bodies like { detail: "..." } — they are not pattern payloads
-        if (!data || typeof data !== "object" || !("trend" in data) || !("insights" in data)) {
-          return null;
-        }
-        return data as PatternInsights;
-      })
+      .then((res) => res.json())
       .then((data) => setPatterns(data))
       .catch(() => setPatterns(null))
       .finally(() => setPatternsLoading(false));
@@ -248,10 +229,8 @@ export default function InsightsPage() {
 
   if (!username) return null;
 
-  const positiveKeywords =
-    patterns?.keyword_correlations?.filter((k) => k.association === "positive").slice(0, 8) ?? [];
-  const negativeKeywords =
-    patterns?.keyword_correlations?.filter((k) => k.association === "negative").slice(0, 8) ?? [];
+  const positiveKeywords = patterns?.keyword_correlations.filter((k) => k.association === "positive").slice(0, 8) ?? [];
+  const negativeKeywords = patterns?.keyword_correlations.filter((k) => k.association === "negative").slice(0, 8) ?? [];
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
@@ -277,7 +256,7 @@ export default function InsightsPage() {
       {loading && <p className="text-foreground-muted">Loading...</p>}
       {error && <p className="text-red-400 text-sm">{error}</p>}
 
-      {!loading && !error && filteredEntries.length === 0 && entries.length === 0 && (
+      {!loading && !error && filteredEntries.length === 0 && (
         <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-6 text-center">
           <p className="text-foreground-muted mb-2">No entries in the last {days} days.</p>
           <p className="text-sm text-foreground-muted">
@@ -287,18 +266,7 @@ export default function InsightsPage() {
         </div>
       )}
 
-      {!loading && !error && entries.length > 0 && filteredEntries.length === 0 && (
-        <div className="rounded-xl border border-amber-800/40 bg-amber-950/30 p-6 text-center mb-6">
-          <p className="text-foreground-muted mb-2">
-            You have {entries.length} saved entr{entries.length === 1 ? "y" : "ies"}, but none in the last {days} days.
-          </p>
-          <p className="text-sm text-foreground-muted">
-            Try <span className="text-sunburst font-medium">30 days</span> above, or add a new entry with Quick Check / Diary.
-          </p>
-        </div>
-      )}
-
-      {!loading && !error && (filteredEntries.length > 0 || entries.length > 0) && (
+      {!loading && !error && filteredEntries.length > 0 && (
         <div className="space-y-8">
 
           {/* ── Pattern Engine Section ── */}
@@ -320,11 +288,11 @@ export default function InsightsPage() {
             <div className="space-y-6">
 
               {/* AI insight cards */}
-              {(patterns.insights?.length ?? 0) > 0 && (
+              {patterns.insights.length > 0 && (
                 <section>
                   <h2 className="text-lg font-semibold text-foreground mb-3">What your data says</h2>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {(patterns.insights ?? []).map((insight, i) => (
+                    {patterns.insights.map((insight, i) => (
                       <div
                         key={i}
                         className="rounded-xl border border-midnight-lighter bg-midnight-light px-4 py-3 flex items-start gap-3"
