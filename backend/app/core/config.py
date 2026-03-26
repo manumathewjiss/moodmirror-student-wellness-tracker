@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
 
-    cors_origins: str = "http://localhost:3000"
+    # Include 127.0.0.1 so opening the app via http://127.0.0.1:3000 does not hit CORS errors
+    cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/moodmirror"
 

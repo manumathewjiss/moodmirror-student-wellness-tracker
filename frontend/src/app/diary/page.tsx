@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
+import { API_BASE } from "@/lib/api-config";
+import { describeNetworkError, formatApiErrorBody } from "@/lib/api-error";
 
 type DiaryResult = {
   id: string;
@@ -63,11 +64,18 @@ export default function DiaryPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, keywords: combined, tone: tone || undefined }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail ?? "Request failed");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const detail = formatApiErrorBody(data);
+        const hint =
+          res.status === 500 && /OPENAI|OPENAI_API_KEY|not set/i.test(detail)
+            ? " Add OPENAI_API_KEY to backend/.env and restart the API."
+            : "";
+        throw new Error(detail + hint);
+      }
       setResult(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(describeNetworkError(err, API_BASE));
     } finally {
       setLoading(false);
     }
@@ -98,6 +106,9 @@ export default function DiaryPage() {
       <header className="mb-8">
         <h1 className="text-2xl font-bold text-foreground mb-2">Diary</h1>
         <p className="text-foreground-muted text-sm">Add keywords or moods one by one; use "Add another" for more (max 10). Enter keywords and we’ll generate a short diary entry, analyze its emotion, and save it.</p>
+        <p className="text-foreground-muted text-xs mt-2">
+          Diary generation needs the API running and <span className="text-foreground">OPENAI_API_KEY</span> set in your backend <code className="text-sunburst">.env</code> (local dev).
+        </p>
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-5">
