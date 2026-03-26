@@ -35,6 +35,15 @@ WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturd
 
 ALL_LABELS = ["positive", "neutral", "negative"]
 
+# Crisis / severe distress tokens (from _extract_keywords). Raw correlation can wrongly
+# label these "positive" on tiny samples; never surface them as upbeat in insights.
+CRISIS_SENSITIVE_KEYWORDS = frozenset({
+    "suicide", "suicidal", "kill", "killing", "die", "died", "dies", "dying", "death", "dead",
+    "overdose", "hang", "hanged", "hopeless", "hopelessness", "worthless",
+    "hurt", "hurting", "harm", "harmful", "abuse", "abused", "rape",
+    "cutting", "bleed", "bleeding",
+})
+
 
 class PatternEngine:
     MIN_ENTRIES_BASIC = 3
@@ -212,11 +221,16 @@ class PatternEngine:
             if len(kw_scores) < 2:
                 continue
             avg = float(np.mean(kw_scores))
+            association = "positive" if avg > 0.2 else "negative" if avg < -0.2 else "neutral"
+            avg_rounded = round(avg, 3)
+            if kw.lower() in CRISIS_SENSITIVE_KEYWORDS:
+                association = "negative"
+                avg_rounded = round(min(avg, -0.25), 3)
             results.append({
                 "keyword": kw,
-                "avg_score": round(avg, 3),
+                "avg_score": avg_rounded,
                 "count": len(kw_scores),
-                "association": "positive" if avg > 0.2 else "negative" if avg < -0.2 else "neutral",
+                "association": association,
             })
 
         results.sort(key=lambda x: abs(x["avg_score"]), reverse=True)
@@ -298,7 +312,11 @@ class PatternEngine:
             insights.append("You've been emotionally consistent recently.")
 
         top_negative = [k for k in keyword_correlations if k["association"] == "negative"][:2]
-        top_positive = [k for k in keyword_correlations if k["association"] == "positive"][:2]
+        top_positive = [
+            k
+            for k in keyword_correlations
+            if k["association"] == "positive" and k["keyword"].lower() not in CRISIS_SENSITIVE_KEYWORDS
+        ][:2]
         for kw in top_negative:
             insights.append(f"'{kw['keyword']}' tends to show up on your lower mood days.")
         for kw in top_positive:
