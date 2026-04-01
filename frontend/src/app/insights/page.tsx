@@ -17,6 +17,12 @@ import {
   Legend,
 } from "recharts";
 
+import {
+  moodLabelForCalendar,
+  pickCalendarAdvice,
+  type CalendarMood,
+} from "./moodCalendarAdvice";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
 type MoodEntry = {
@@ -107,6 +113,7 @@ export default function InsightsPage() {
   const [range, setRange] = useState<"7" | "14" | "30">("14");
   const [patterns, setPatterns] = useState<PatternInsights | null>(null);
   const [patternsLoading, setPatternsLoading] = useState(true);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null;
@@ -199,6 +206,22 @@ export default function InsightsPage() {
     }
     return out;
   }, [filteredEntries, cutoff]);
+
+  useEffect(() => {
+    if (calendarDays.length === 0) return;
+    setSelectedCalendarDate((prev) => {
+      if (prev && calendarDays.some((d) => d.date === prev)) return prev;
+      for (let i = calendarDays.length - 1; i >= 0; i--) {
+        if (calendarDays[i].mood !== "none") return calendarDays[i].date;
+      }
+      return calendarDays[calendarDays.length - 1]!.date;
+    });
+  }, [calendarDays]);
+
+  const selectedCalendarDay = useMemo(() => {
+    if (!selectedCalendarDate) return null;
+    return calendarDays.find((d) => d.date === selectedCalendarDate) ?? null;
+  }, [calendarDays, selectedCalendarDate]);
 
   const dayOfWeekData = useMemo(() => {
     const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -488,26 +511,33 @@ export default function InsightsPage() {
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
             <h2 className="text-lg font-semibold text-foreground mb-1">Calendar heatmap</h2>
             <p className="text-foreground-muted text-sm mb-4">
-              Each cell is a day. Color = dominant mood that day; empty = no entry.
+              Each cell is a day. Color = dominant mood that day; empty = no entry. Tap a day for a tailored note.
             </p>
             <div className="flex flex-wrap gap-1">
-              {calendarDays.map((day) => (
-                <div
-                  key={day.date}
-                  title={`${day.label}: ${day.mood === "none" ? "No entry" : day.mood}`}
-                  className={`w-8 h-8 rounded flex items-center justify-center text-xs font-medium ${
-                    day.mood === "positive"
-                      ? "bg-emerald-600 text-white"
-                      : day.mood === "negative"
-                        ? "bg-red-600 text-white"
-                        : day.mood === "neutral"
-                          ? "bg-slate-500 text-white"
-                          : "bg-midnight border border-midnight-lighter text-foreground-muted"
-                  }`}
-                >
-                  {new Date(day.date).getDate()}
-                </div>
-              ))}
+              {calendarDays.map((day) => {
+                const isSelected = selectedCalendarDate === day.date;
+                return (
+                  <button
+                    key={day.date}
+                    type="button"
+                    title={`${day.label}: ${day.mood === "none" ? "No entry" : day.mood}`}
+                    onClick={() => setSelectedCalendarDate(day.date)}
+                    className={`w-8 h-8 rounded flex items-center justify-center text-xs font-medium transition-[box-shadow,transform] focus:outline-none focus-visible:ring-2 focus-visible:ring-sunburst focus-visible:ring-offset-2 focus-visible:ring-offset-midnight-light ${
+                      isSelected ? "ring-2 ring-sunburst ring-offset-2 ring-offset-midnight-light scale-105" : ""
+                    } ${
+                      day.mood === "positive"
+                        ? "bg-emerald-600 text-white"
+                        : day.mood === "negative"
+                          ? "bg-red-600 text-white"
+                          : day.mood === "neutral"
+                            ? "bg-slate-500 text-white"
+                            : "bg-midnight border border-midnight-lighter text-foreground-muted"
+                    }`}
+                  >
+                    {new Date(day.date).getDate()}
+                  </button>
+                );
+              })}
             </div>
             <div className="mt-3 flex flex-wrap gap-4 text-xs text-foreground-muted">
               <span className="flex items-center gap-1.5">
@@ -523,6 +553,32 @@ export default function InsightsPage() {
                 <span className="w-3 h-3 rounded border border-midnight-lighter bg-midnight" /> No entry
               </span>
             </div>
+            {selectedCalendarDay && (
+              <div
+                className={`mt-5 rounded-lg border px-4 py-3 ${
+                  selectedCalendarDay.mood === "positive"
+                    ? "border-emerald-800/50 bg-emerald-950/30"
+                    : selectedCalendarDay.mood === "negative"
+                      ? "border-red-800/50 bg-red-950/30"
+                      : selectedCalendarDay.mood === "neutral"
+                        ? "border-slate-600/50 bg-slate-900/40"
+                        : "border-midnight-lighter bg-midnight/80"
+                }`}
+              >
+                <p className="text-xs font-semibold uppercase tracking-wide text-foreground-muted mb-1">
+                  {new Date(selectedCalendarDay.date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                  {" · "}
+                  {moodLabelForCalendar(selectedCalendarDay.mood as CalendarMood)}
+                </p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {pickCalendarAdvice(selectedCalendarDay.mood as CalendarMood, selectedCalendarDay.date)}
+                </p>
+              </div>
+            )}
           </section>
 
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
