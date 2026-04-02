@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from typing import Dict
 
-# Stress / discomfort / overload — counted in keywords + generated diary
+# Stress / discomfort / overload (counted in keywords + generated diary)
 _NEGATIVE_PATTERNS = [
     r"headache",
     r"migraine",
@@ -47,7 +47,7 @@ _NEGATIVE_PATTERNS = [
     r"\bbusy\b",  # weak alone; combined with other hits it helps
 ]
 
-# Clear positive mood — dampens negative nudge when genuinely celebratory
+# Clear positive mood: dampens negative nudge when genuinely celebratory
 _POSITIVE_PATTERNS = [
     r"\bgreat\b",
     r"\bwonderful\b",

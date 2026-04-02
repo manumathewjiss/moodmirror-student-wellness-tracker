@@ -104,7 +104,7 @@ function predictionColor(label: string | null) {
   return "text-slate-400";
 }
 
-/** YYYY-MM-DD as local midnight — not UTC (Date-only strings parse as UTC and shift labels in many timezones). */
+/** YYYY-MM-DD as local midnight (not UTC: date-only ISO strings parse as UTC and shift labels in many timezones). */
 function parseYmdLocal(ymd: string): Date {
   const parts = ymd.split("-").map((x) => parseInt(x, 10));
   const y = parts[0];
@@ -333,7 +333,7 @@ export default function InsightsPage() {
               <div>
                 <p className="text-foreground font-medium text-sm">Deeper insights unlock soon</p>
                 <p className="text-foreground-muted text-sm mt-0.5">
-                  Keep logging — pattern analysis becomes available after a few more entries.
+                  Keep logging. Pattern analysis unlocks after a few more entries.
                 </p>
               </div>
             </div>
@@ -493,7 +493,7 @@ export default function InsightsPage() {
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
             <h2 className="text-lg font-semibold text-foreground mb-1">Mood trend line</h2>
             <p className="text-foreground-muted text-sm mb-4">
-              Daily average: +1 = positive, 0 = neutral, −1 = negative. Higher line = better mood.
+              Daily average: +1 = positive, 0 = neutral, -1 = negative. A higher line means a better mood.
             </p>
             {trendData.length === 0 ? (
               <p className="text-foreground-muted text-sm">No data to show.</p>
@@ -624,7 +624,7 @@ export default function InsightsPage() {
           <section className="rounded-xl border border-midnight-lighter bg-midnight-light p-6">
             <h2 className="text-lg font-semibold text-foreground mb-1">Day of week</h2>
             <p className="text-foreground-muted text-sm mb-4">
-              Number of entries by weekday — showing how your mood distributes across the week.
+              Number of entries by weekday, showing how your mood spreads across the week.
             </p>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">

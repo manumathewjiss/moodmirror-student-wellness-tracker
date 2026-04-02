@@ -6,33 +6,33 @@
 export type CalendarMood = "positive" | "negative" | "neutral" | "none";
 
 const POSITIVE: string[] = [
-  "Your log leans positive—notice what helped today and try to repeat it tomorrow.",
-  "Good energy shows in your words—share that lift with someone or a hobby you enjoy.",
-  "Ride this wave: jot one thing you’re grateful for before bed.",
-  "Positive streaks grow from small habits—keep the routines that support you.",
+  "Your log leans positive. Notice what helped today and try to repeat it tomorrow.",
+  "Good energy shows in your words. Share that lift with someone or a hobby you enjoy.",
+  "Ride this wave: jot one thing you're grateful for before bed.",
+  "Positive streaks grow from small habits. Keep the routines that support you.",
   "Acknowledge this win: recognizing good days makes them easier to find again.",
 ];
 
 const NEUTRAL: string[] = [
-  "Neutral days can be a steady baseline—check sleep, meals, and movement without judging yourself.",
-  "Steady mood often means balance—plan something small you look forward to.",
-  "Mixed signals are normal—one neutral day doesn’t define your week.",
+  "Neutral days can be a steady baseline. Check sleep, meals, and movement without judging yourself.",
+  "Steady mood often means balance. Plan something small you look forward to.",
+  "Mixed signals are normal. One neutral day doesn't define your week.",
   "Try a five-minute check-in: name one feeling, one need, and one tiny next step.",
-  "Calm can be restorative—give yourself permission to keep the pace manageable.",
+  "Calm can be restorative. Give yourself permission to keep the pace manageable.",
 ];
 
 const NEGATIVE: string[] = [
-  "Heavy days are hard—prioritize rest, hydration, and one kind action toward yourself.",
+  "Heavy days are hard. Prioritize rest, hydration, and one kind action toward yourself.",
   "If today felt low, breaking tasks into tiny steps can reduce the load.",
-  "Rough patches happen—reaching out to someone you trust can help.",
+  "Rough patches happen. Reaching out to someone you trust can help.",
   "Notice without spiraling: name the feeling, then one thing that usually helps a little.",
   "If low mood lasts or feels overwhelming, consider talking to a professional or crisis line.",
 ];
 
 const NONE: string[] = [
-  "No entry this day—when you’re ready, a quick note here can make patterns clearer.",
-  "Logging skipped—even a word or emoji next time still builds your picture.",
-  "Empty days happen—a fresh entry tomorrow still adds to your story.",
+  "No entry this day. When you're ready, a quick note here can make patterns clearer.",
+  "Logging skipped. Even a word or emoji next time still builds your picture.",
+  "Empty days happen. A fresh entry tomorrow still adds to your story.",
 ];
 
 function hashString(s: string): number {

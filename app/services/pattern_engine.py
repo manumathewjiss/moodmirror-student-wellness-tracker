@@ -57,7 +57,8 @@ class PatternEngine:
         return LABEL_SCORE.get(entry.label, 0.0)
 
     def _extract_keywords(self, text: str) -> list[str]:
-        words = re.findall(r"[a-z]+", text.lower())
+        # Keep apostrophes inside words so "couldn't" is one token, not the junk fragment "couldn".
+        words = re.findall(r"[a-z]+(?:'[a-z]+)?", text.lower())
         return [w for w in words if len(w) >= 3 and w not in STOPWORDS]
 
     # ------------------------------------------------------------------
@@ -296,7 +297,7 @@ class PatternEngine:
 
         direction = trend.get("direction")
         if direction == "improving":
-            insights.append("Your mood has been improving — keep it up.")
+            insights.append("Your mood has been improving. Keep it up.")
         elif direction == "declining":
             insights.append("Your mood has been declining recently. It might help to take a moment for yourself.")
 
@@ -307,7 +308,7 @@ class PatternEngine:
 
         vol_level = volatility.get("level")
         if vol_level == "high":
-            insights.append("Your mood has been quite variable lately — big swings day to day.")
+            insights.append("Your mood has been quite variable lately, with big swings day to day.")
         elif vol_level == "low":
             insights.append("You've been emotionally consistent recently.")
 
@@ -325,7 +326,7 @@ class PatternEngine:
         positive_streak = streaks.get("current_positive_streak", 0)
         logging_streak = streaks.get("logging_streak", 0)
         if positive_streak >= 3:
-            insights.append(f"You're on a {positive_streak}-day positive streak — great momentum!")
+            insights.append(f"You're on a {positive_streak}-day positive streak. Great momentum!")
         if logging_streak >= 7:
             insights.append(f"You've logged for {logging_streak} days in a row. Consistency is key.")
 
