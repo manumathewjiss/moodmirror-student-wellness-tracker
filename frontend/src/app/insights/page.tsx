@@ -104,6 +104,37 @@ function predictionColor(label: string | null) {
   return "text-slate-400";
 }
 
+/** YYYY-MM-DD as local midnight — not UTC (Date-only strings parse as UTC and shift labels in many timezones). */
+function parseYmdLocal(ymd: string): Date {
+  const parts = ymd.split("-").map((x) => parseInt(x, 10));
+  const y = parts[0];
+  const m = parts[1];
+  const d = parts[2];
+  if (y === undefined || m === undefined || d === undefined || [y, m, d].some((n) => Number.isNaN(n))) {
+    return new Date(ymd);
+  }
+  return new Date(y, m - 1, d);
+}
+
+function formatShortMonthDayYmd(ymd: string): string {
+  return parseYmdLocal(ymd).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+/** Local calendar date key for a Date (avoid toISOString().slice(0,10) shifting the day across timezones). */
+function formatDateKeyLocal(d: Date): string {
+  const y = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${mo}-${day}`;
+}
+
+/** Bucket entries by the user's local calendar day (not the UTC prefix of ISO strings). */
+function localDateKeyFromTimestamp(isoTimestamp: string): string {
+  const d = new Date(isoTimestamp);
+  if (Number.isNaN(d.getTime())) return isoTimestamp.slice(0, 10);
+  return formatDateKeyLocal(d);
+}
+
 export default function InsightsPage() {
   const router = useRouter();
   const [username, setUsername] = useState<string | null>(null);
@@ -162,7 +193,7 @@ export default function InsightsPage() {
   const trendData = useMemo(() => {
     const byDay: Record<string, number[]> = {};
     filteredEntries.forEach((e) => {
-      const date = e.timestamp.slice(0, 10);
+      const date = localDateKeyFromTimestamp(e.timestamp);
       if (!byDay[date]) byDay[date] = [];
       byDay[date].push(moodToScore(e.label));
     });
@@ -171,7 +202,6 @@ export default function InsightsPage() {
       const avg = scores.reduce((s, v) => s + v, 0) / scores.length;
       return {
         date,
-        label: new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
         score: Math.round(avg * 100) / 100,
       };
     });
@@ -180,7 +210,7 @@ export default function InsightsPage() {
   const calendarDays = useMemo(() => {
     const byDay: Record<string, { positive: number; negative: number; neutral: number }> = {};
     filteredEntries.forEach((e) => {
-      const date = e.timestamp.slice(0, 10);
+      const date = localDateKeyFromTimestamp(e.timestamp);
       const label = e.label?.toLowerCase();
       const mood = label === "positive" || label === "negative" || label === "neutral" ? label : "neutral";
       if (!byDay[date]) byDay[date] = { positive: 0, negative: 0, neutral: 0 };
@@ -196,12 +226,12 @@ export default function InsightsPage() {
     const start = new Date(cutoff);
     const end = new Date();
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().slice(0, 10);
+      const dateStr = formatDateKeyLocal(d);
       const counts = byDay[dateStr];
       out.push({
         date: dateStr,
         mood: counts ? dominant(counts) : "none",
-        label: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        label: formatShortMonthDayYmd(dateStr),
       });
     }
     return out;
@@ -472,7 +502,13 @@ export default function InsightsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={trendData} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#383f4b" />
-                    <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 12 }} />
+                    <XAxis
+                      dataKey="date"
+                      type="category"
+                      stroke="#94a3b8"
+                      tick={{ fontSize: 12 }}
+                      tickFormatter={(v) => formatShortMonthDayYmd(String(v))}
+                    />
                     <YAxis
                       domain={[-1.2, 1.2]}
                       stroke="#94a3b8"
@@ -491,7 +527,11 @@ export default function InsightsPage() {
                         value === 1 ? "Positive" : value === -1 ? "Negative" : "Neutral",
                         value ?? 0,
                       ]}
-                      labelFormatter={(_, payload) => payload[0]?.payload?.date}
+                      labelFormatter={(_, payload) => {
+                        const ymd = payload[0]?.payload?.date as string | undefined;
+                        if (!ymd) return "";
+                        return formatShortMonthDayYmd(ymd);
+                      }}
                     />
                     <ReferenceLine y={0} stroke="#64748b" strokeDasharray="2 2" />
                     <Line
@@ -534,7 +574,7 @@ export default function InsightsPage() {
                             : "bg-midnight border border-midnight-lighter text-foreground-muted"
                     }`}
                   >
-                    {new Date(day.date).getDate()}
+                    {parseYmdLocal(day.date).getDate()}
                   </button>
                 );
               })}
@@ -566,7 +606,7 @@ export default function InsightsPage() {
                 }`}
               >
                 <p className="text-xs font-semibold uppercase tracking-wide text-foreground-muted mb-1">
-                  {new Date(selectedCalendarDay.date).toLocaleDateString("en-US", {
+                  {parseYmdLocal(selectedCalendarDay.date).toLocaleDateString("en-US", {
                     weekday: "long",
                     month: "long",
                     day: "numeric",
