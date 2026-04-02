@@ -44,6 +44,12 @@ CRISIS_SENSITIVE_KEYWORDS = frozenset({
     "cutting", "bleed", "bleeding",
 })
 
+# Leftover stems when "couldn't" etc. is split by tokenizer or uses a curly apostrophe (’).
+CONTRACTION_FRAGMENT_TOKENS = frozenset({
+    "couldn", "wouldn", "shouldn", "don", "doesn", "didn", "wasn", "weren", "isn",
+    "haven", "hasn", "hadn", "mightn", "mustn", "needn", "ain",
+})
+
 
 class PatternEngine:
     MIN_ENTRIES_BASIC = 3
@@ -57,9 +63,22 @@ class PatternEngine:
         return LABEL_SCORE.get(entry.label, 0.0)
 
     def _extract_keywords(self, text: str) -> list[str]:
-        # Keep apostrophes inside words so "couldn't" is one token, not the junk fragment "couldn".
-        words = re.findall(r"[a-z]+(?:'[a-z]+)?", text.lower())
-        return [w for w in words if len(w) >= 3 and w not in STOPWORDS]
+        t = text.lower()
+        for ch in ("\u2019", "\u2018", "\u02bc", "\u02b9"):  # ’ ‘ modifier letter apostrophe, prime
+            t = t.replace(ch, "'")
+        # One token for couldn't / don't (ASCII apostrophe after normalization).
+        words = re.findall(r"[a-z]+(?:'[a-z]+)?", t)
+        out: list[str] = []
+        for w in words:
+            if len(w) < 3 or w in STOPWORDS:
+                continue
+            if w in CONTRACTION_FRAGMENT_TOKENS:
+                continue
+            stem = w.rstrip("'")
+            if stem in CONTRACTION_FRAGMENT_TOKENS and not w.endswith("'t"):
+                continue
+            out.append(w)
+        return out
 
     # ------------------------------------------------------------------
     # Trend: linear regression on positivity score over time

@@ -104,6 +104,44 @@ function predictionColor(label: string | null) {
   return "text-slate-400";
 }
 
+const CONTRACTION_FRAGMENTS = new Set([
+  "couldn", "wouldn", "shouldn", "don", "doesn", "didn", "wasn", "weren", "isn",
+  "haven", "hasn", "hadn", "mightn", "mustn", "needn", "ain",
+]);
+
+function normalizeKwToken(kw: string): string {
+  return kw
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/\u2019/g, "'")
+    .replace(/\u2018/g, "'")
+    .replace(/'+$/g, "")
+    .trim();
+}
+
+function isContractionFragmentKeyword(kw: string): boolean {
+  const k = normalizeKwToken(kw);
+  if (CONTRACTION_FRAGMENTS.has(k)) return true;
+  if (k.endsWith("'") && CONTRACTION_FRAGMENTS.has(k.slice(0, -1))) return true;
+  return false;
+}
+
+/** API may still return em dashes from an older backend; normalize for display. */
+function stripEmDashUi(s: string): string {
+  return s
+    .replace(/\u2014/g, ", ")
+    .replace(/\u2013/g, " - ")
+    .replace(/\s+/g, " ")
+    .replace(/\s*,\s*,+/g, ", ")
+    .trim();
+}
+
+function shouldHideKeywordInsightLine(line: string): boolean {
+  const m = line.match(/^'([^']+)'/);
+  if (!m?.[1]) return false;
+  return isContractionFragmentKeyword(m[1]);
+}
+
 /** YYYY-MM-DD as local midnight (not UTC: date-only ISO strings parse as UTC and shift labels in many timezones). */
 function parseYmdLocal(ymd: string): Date {
   const parts = ymd.split("-").map((x) => parseInt(x, 10));
@@ -282,8 +320,19 @@ export default function InsightsPage() {
 
   if (!username) return null;
 
-  const positiveKeywords = patterns?.keyword_correlations.filter((k) => k.association === "positive").slice(0, 8) ?? [];
-  const negativeKeywords = patterns?.keyword_correlations.filter((k) => k.association === "negative").slice(0, 8) ?? [];
+  const positiveKeywords =
+    patterns?.keyword_correlations
+      .filter((k) => k.association === "positive" && !isContractionFragmentKeyword(k.keyword))
+      .slice(0, 8) ?? [];
+  const negativeKeywords =
+    patterns?.keyword_correlations
+      .filter((k) => k.association === "negative" && !isContractionFragmentKeyword(k.keyword))
+      .slice(0, 8) ?? [];
+
+  const displayInsightLines =
+    patterns?.insights
+      .filter((line) => !shouldHideKeywordInsightLine(line))
+      .map(stripEmDashUi) ?? [];
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
@@ -341,11 +390,11 @@ export default function InsightsPage() {
             <div className="space-y-6">
 
               {/* AI insight cards */}
-              {patterns.insights.length > 0 && (
+              {displayInsightLines.length > 0 && (
                 <section>
                   <h2 className="text-lg font-semibold text-foreground mb-3">What your data says</h2>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {patterns.insights.map((insight, i) => (
+                    {displayInsightLines.map((insight, i) => (
                       <div
                         key={i}
                         className="rounded-xl border border-midnight-lighter bg-midnight-light px-4 py-3 flex items-start gap-3"
@@ -391,7 +440,9 @@ export default function InsightsPage() {
                       {patterns.trend.direction === "insufficient_data" ? "Not enough data" : patterns.trend.direction}
                     </p>
                   </div>
-                  <p className="text-foreground-muted text-xs leading-relaxed">{patterns.trend.message}</p>
+                  <p className="text-foreground-muted text-xs leading-relaxed">
+                    {stripEmDashUi(patterns.trend.message)}
+                  </p>
                 </div>
 
                 <div className="rounded-xl border border-midnight-lighter bg-midnight-light p-5">
@@ -399,7 +450,9 @@ export default function InsightsPage() {
                   <p className={`text-lg font-bold capitalize mb-1 ${volatilityColor(patterns.volatility.level)}`}>
                     {patterns.volatility.level === "insufficient_data" ? "Not enough data" : patterns.volatility.level}
                   </p>
-                  <p className="text-foreground-muted text-xs leading-relaxed">{patterns.volatility.message}</p>
+                  <p className="text-foreground-muted text-xs leading-relaxed">
+                    {stripEmDashUi(patterns.volatility.message)}
+                  </p>
                   {patterns.volatility.mood_switches > 0 && (
                     <p className="text-foreground-muted text-xs mt-1">{patterns.volatility.mood_switches} mood switches</p>
                   )}
