@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import io
 from typing import Optional
 
-from openai import OpenAI
+from openai import APIError, OpenAI
 
 from app.core.config import get_settings
 
@@ -18,6 +19,7 @@ class LLMService:
             raise LLMNotConfiguredError("OPENAI_API_KEY is not set.")
 
         self._model_name = settings.openai_model
+        self._whisper_model = settings.openai_whisper_model
         self._client = OpenAI(api_key=settings.openai_api_key)
 
     def generate_diary(self, keywords: str, tone: Optional[str] = None) -> str:
@@ -39,6 +41,20 @@ class LLMService:
         if response.choices and len(response.choices) > 0 and response.choices[0].message.content:
             return response.choices[0].message.content.strip()
         return ""
+
+    def transcribe_speech(self, audio_bytes: bytes, filename: str) -> str:
+        """Transcribe short voice clips via OpenAI Whisper (speech-to-text only)."""
+        buffer = io.BytesIO(audio_bytes)
+        buffer.name = filename or "audio.webm"
+        try:
+            transcription = self._client.audio.transcriptions.create(
+                model=self._whisper_model,
+                file=buffer,
+            )
+        except APIError as e:
+            raise RuntimeError(str(e)) from e
+        text = getattr(transcription, "text", None) or ""
+        return text.strip()
 
 
 _llm_service: Optional[LLMService] = None

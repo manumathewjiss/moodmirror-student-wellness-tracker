@@ -30,6 +30,8 @@ class Settings(BaseSettings):
 
     openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
+    # Speech-to-text (Diary / accessibility); OpenAI Whisper API model id.
+    openai_whisper_model: str = "whisper-1"
 
     def cors_origin_list(self) -> List[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

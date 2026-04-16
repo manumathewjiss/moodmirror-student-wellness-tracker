@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DiaryVoiceButton from "@/components/DiaryVoiceButton";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
@@ -28,6 +29,8 @@ export default function DiaryPage() {
   const [keywordBoxes, setKeywordBoxes] = useState<string[]>([""]);
   const [tone, setTone] = useState("casual");
   const [loading, setLoading] = useState(false);
+  const [voiceSessionOwner, setVoiceSessionOwner] = useState<number | null>(null);
+  const voiceBusy = voiceSessionOwner !== null;
   const [result, setResult] = useState<DiaryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,7 +134,7 @@ export default function DiaryPage() {
               <button
                 key={m.label}
                 type="button"
-                disabled={loading}
+                disabled={loading || voiceBusy}
                 onClick={() => handleQuickMood(m.keywords)}
                 title={`Save as ${m.label.toLowerCase()}`}
                 className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-sunburst/80 bg-midnight-light text-2xl transition hover:border-sunburst hover:bg-midnight-lighter hover:ring-2 hover:ring-sunburst/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunburst disabled:cursor-not-allowed disabled:opacity-50"
@@ -145,15 +148,34 @@ export default function DiaryPage() {
         </div>
         <div className="space-y-3">
           <span className="block text-sm font-medium text-foreground">Keywords / mood</span>
+          <p className="text-xs text-foreground-muted -mt-1 mb-2">
+            Tap the mic to dictate; speech is converted to text with OpenAI Whisper and filled in here. You can still edit before generating.
+          </p>
           {keywordBoxes.map((value, index) => (
-            <div key={index}>
+            <div key={index} className="flex gap-2 items-start">
               <label className="sr-only">Keyword {index + 1}</label>
               <input
                 type="text"
-                className="w-full rounded-lg border border-midnight-lighter bg-midnight-light px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-sunburst focus:ring-1 focus:ring-sunburst"
+                className="min-w-0 flex-1 rounded-lg border border-midnight-lighter bg-midnight-light px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-sunburst focus:ring-1 focus:ring-sunburst"
                 value={value}
                 onChange={(e) => updateBox(index, e.target.value)}
                 placeholder={index === 0 ? "e.g. exams, tired, friends" : "Another keyword or mood…"}
+              />
+              <DiaryVoiceButton
+                apiBase={API_BASE}
+                fieldIndex={index}
+                sessionOwnerIndex={voiceSessionOwner}
+                onSessionOwnerChange={setVoiceSessionOwner}
+                disabled={loading}
+                onTranscript={(t) => {
+                  setKeywordBoxes((prev) => {
+                    const next = [...prev];
+                    const cur = (next[index] ?? "").trim();
+                    next[index] = cur ? `${cur} ${t}` : t;
+                    return next;
+                  });
+                }}
+                ariaLabel={index === 0 ? "Speak into keyword field" : `Speak for keyword ${index + 1}`}
               />
             </div>
           ))}
@@ -181,7 +203,7 @@ export default function DiaryPage() {
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || voiceBusy}
           className="rounded-lg bg-sunburst px-5 py-2.5 text-sm font-semibold text-midnight hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
         >
           {loading ? "Generating..." : "Generate diary & save"}
