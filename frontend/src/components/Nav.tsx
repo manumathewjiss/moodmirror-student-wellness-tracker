@@ -77,6 +77,12 @@ export default function Nav() {
           >
             Insights
           </Link>
+          <Link
+            href="/reflect"
+            className={`font-medium transition-colors ${pathname === "/reflect" || pathname.startsWith("/reflect/") ? "text-sunburst" : "text-foreground-muted hover:text-foreground"}`}
+          >
+            Reflect
+          </Link>
           {username && (
             <>
               <span className="rounded-full bg-midnight-light px-3 py-1 text-xs font-medium text-sunburst">

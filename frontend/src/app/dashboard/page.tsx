@@ -49,6 +49,11 @@ export default function DashboardPage() {
       title: "Insights",
       description: "Mood trend line, calendar, and other visualizations from your entries.",
     },
+    {
+      href: "/reflect",
+      title: "Reflect",
+      description: "Calming spaces by mood with quotes to help you pause and feel supported.",
+    },
   ];
 
   return (
