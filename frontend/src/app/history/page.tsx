@@ -81,7 +81,9 @@ export default function HistoryPage() {
                 <span>{new Date(e.timestamp).toLocaleString()}</span>
                 <span className="capitalize font-medium text-sunburst">{e.source}</span>
               </div>
-              <p className="text-foreground text-sm mb-2 line-clamp-2">{e.diary_text || e.raw_text}</p>
+              <p className="text-foreground text-sm mb-2 whitespace-pre-wrap break-words">
+                {e.diary_text || e.raw_text}
+              </p>
               <p className={`text-sm font-medium ${labelColor(e.label)}`}>{e.label} ({(e.confidence * 100).toFixed(0)}%)</p>
             </li>
           ))}
