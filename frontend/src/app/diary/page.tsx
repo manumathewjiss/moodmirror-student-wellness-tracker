@@ -17,6 +17,12 @@ type DiaryResult = {
 
 const MAX_KEYWORD_BOXES = 10;
 
+const QUICK_MOODS = [
+  { label: "Positive", emoji: "😊", keywords: "positive mood, feeling good" },
+  { label: "Neutral", emoji: "😐", keywords: "neutral mood, okay" },
+  { label: "Negative", emoji: "😔", keywords: "negative mood, feeling low" },
+] as const;
+
 export default function DiaryPage() {
   const [username, setUsername] = useState<string | null>(null);
   const [keywordBoxes, setKeywordBoxes] = useState<string[]>([""]);
@@ -43,14 +49,13 @@ export default function DiaryPage() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submitDiary(keywords: string) {
     if (!username?.trim()) {
       setError("Please log in first.");
       return;
     }
-    const combined = keywordBoxes.map((k) => k.trim()).filter(Boolean).join(", ");
-    if (!combined) {
+    const trimmed = keywords.trim();
+    if (!trimmed) {
       setError("Enter at least one keyword or mood.");
       return;
     }
@@ -61,7 +66,7 @@ export default function DiaryPage() {
       const res = await fetch(`${API_BASE}/api/v1/mood-entries/diary`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, keywords: combined, tone: tone || undefined }),
+        body: JSON.stringify({ username, keywords: trimmed, tone: tone || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail ?? "Request failed");
@@ -71,6 +76,22 @@ export default function DiaryPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const combined = keywordBoxes.map((k) => k.trim()).filter(Boolean).join(", ");
+    void submitDiary(combined);
+  }
+
+  function handleQuickMood(keywords: string) {
+    setKeywordBoxes((prev) => {
+      const next = [...prev];
+      next[0] = keywords;
+      for (let i = 1; i < next.length; i += 1) next[i] = "";
+      return next.length ? next : [keywords];
+    });
+    void submitDiary(keywords);
   }
 
   if (username === null) {
@@ -97,10 +118,31 @@ export default function DiaryPage() {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <header className="mb-8">
         <h1 className="text-2xl font-bold text-foreground mb-2">Diary</h1>
-        <p className="text-foreground-muted text-sm">Add keywords or moods one by one; use "Add another" for more (max 10). Enter keywords and we’ll generate a short diary entry, analyze its emotion, and save it.</p>
+        <p className="text-foreground-muted text-sm">
+          Tap a mood for a one-click entry, or add keywords below (use the + Add another link for more, max 10). We’ll generate a short diary entry, analyze its emotion, and save it.
+        </p>
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <span className="block text-sm font-medium text-foreground mb-2">Quick mood</span>
+          <div className="flex flex-wrap gap-3">
+            {QUICK_MOODS.map((m) => (
+              <button
+                key={m.label}
+                type="button"
+                disabled={loading}
+                onClick={() => handleQuickMood(m.keywords)}
+                title={`Save as ${m.label.toLowerCase()}`}
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-sunburst/80 bg-midnight-light text-2xl transition hover:border-sunburst hover:bg-midnight-lighter hover:ring-2 hover:ring-sunburst/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunburst disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label={`Record ${m.label} mood and save`}
+              >
+                <span aria-hidden="true">{m.emoji}</span>
+              </button>
+            ))}
+          </div>
+          <p className="mt-1.5 text-xs text-foreground-muted">😊 positive · 😐 neutral · 😔 negative — saves immediately, same as Generate diary and save.</p>
+        </div>
         <div className="space-y-3">
           <span className="block text-sm font-medium text-foreground">Keywords / mood</span>
           {keywordBoxes.map((value, index) => (
