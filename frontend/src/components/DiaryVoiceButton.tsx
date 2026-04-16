@@ -81,7 +81,13 @@ export default function DiaryVoiceButton({
         });
         const data = (await res.json().catch(() => ({}))) as { detail?: string; text?: string };
         if (!res.ok) {
-          throw new Error(typeof data.detail === "string" ? data.detail : "Transcription failed");
+          const detail = typeof data.detail === "string" ? data.detail : "Transcription failed";
+          if (res.status === 404) {
+            throw new Error(
+              "Voice endpoint not found (404). Redeploy the backend with the latest code, or check that NEXT_PUBLIC_API_BASE_URL points at that API (not an old build)."
+            );
+          }
+          throw new Error(detail);
         }
         const text = (data.text ?? "").trim();
         if (!text) {
