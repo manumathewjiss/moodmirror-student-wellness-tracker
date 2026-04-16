@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --midnight: #252C37;
-  --midnight-light: #2e3642;
-  --midnight-lighter: #383f4b;
-  --sunburst: #F8C61E;
-  --sunburst-dark: #d4a618;
-  --foreground: #f1f5f9;
-  --foreground-muted: #94a3b8;
+  /* Palette from approved moodboard screenshot */
+  --midnight: #1f2d33; /* Midnight */
+  --midnight-light: #154c66; /* Deep Ocean */
+  --midnight-lighter: #1b6d7f; /* Tidal Blue */
+  --sunburst: #d9b382; /* Golden Dune */
+  --sunburst-dark: #c39c69;
+  --foreground: #fff4e5; /* Ivory Sand */
+  --foreground-muted: #9cb7c7; /* Sky Mist */
 }
 
 @theme inline {
@@ -18,12 +19,14 @@
   --color-sunburst-dark: var(--sunburst-dark);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-cairo);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--midnight);
+  background:
+    radial-gradient(circle at top, #1b6d7f55 0%, transparent 35%),
+    linear-gradient(180deg, var(--midnight) 0%, #154c66 100%);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-cairo), system-ui, sans-serif;
 }
