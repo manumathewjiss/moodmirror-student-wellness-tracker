@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* Palette from approved moodboard screenshot */
-  --midnight: #1f2d33; /* Midnight */
-  --midnight-light: #154c66; /* Deep Ocean */
-  --midnight-lighter: #1b6d7f; /* Tidal Blue */
-  --sunburst: #d9b382; /* Golden Dune */
-  --sunburst-dark: #c39c69;
-  --foreground: #fff4e5; /* Ivory Sand */
-  --foreground-muted: #9cb7c7; /* Sky Mist */
+  /* Bright, pleasant gradient palette */
+  --midnight: #0f3d56;
+  --midnight-light: #1a6f8b;
+  --midnight-lighter: #2fa6c2;
+  --sunburst: #ffd166;
+  --sunburst-dark: #f4b942;
+  --foreground: #f8fdff;
+  --foreground-muted: #d6edf5;
 }
 
 @theme inline {
@@ -25,8 +25,9 @@
 
 body {
   background:
-    radial-gradient(circle at top, #1b6d7f55 0%, transparent 35%),
-    linear-gradient(180deg, var(--midnight) 0%, #154c66 100%);
+    radial-gradient(circle at 15% 10%, #7ae7ff44 0%, transparent 35%),
+    radial-gradient(circle at 85% 0%, #ffd16633 0%, transparent 30%),
+    linear-gradient(180deg, #1b7ea4 0%, #145a7a 45%, #0f3d56 100%);
   color: var(--foreground);
   font-family: var(--font-cairo), system-ui, sans-serif;
 }
