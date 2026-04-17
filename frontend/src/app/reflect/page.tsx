@@ -9,8 +9,8 @@ export const metadata = {
 
 export default function ReflectHubPage() {
   return (
-    <div className="relative min-h-[calc(100dvh-5rem)] overflow-hidden">
-      <ReflectBackdrop variant="forest" className="opacity-25" />
+    <div className="relative min-h-[calc(100dvh-5rem)] overflow-hidden bg-gradient-to-b from-stone-50/80 via-amber-50/20 to-transparent">
+      <ReflectBackdrop variant="forest" className="opacity-[0.12]" />
       <main className="relative z-10 mx-auto max-w-3xl px-4 py-10">
         <header className="mb-10 text-center sm:text-left">
           <h1 className="text-3xl font-bold text-foreground mb-2">Reflect</h1>
@@ -25,7 +25,7 @@ export default function ReflectHubPage() {
             <li key={m.slug}>
               <Link
                 href={`/reflect/${m.slug}`}
-                className={`block rounded-2xl border p-5 transition hover:scale-[1.01] hover:shadow-lg hover:shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunburst ${m.theme.hubCard}`}
+                className={`block rounded-2xl border p-5 transition hover:scale-[1.01] hover:shadow-lg hover:shadow-stone-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sunburst ${m.theme.hubCard}`}
               >
                 <div className="flex items-start gap-3">
                   <span className="text-3xl leading-none" aria-hidden>

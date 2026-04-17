@@ -16,7 +16,7 @@ export type MoodReflectionTheme = {
   pageGradient: string;
   /** Individual quote panels */
   quotePanel: string;
-  /** Accent for headings / links on detail */
+  /** Accent for headings / links on detail (dark, readable on light) */
   accent: string;
   /** Backdrop illustration variant */
   backdrop: "sun" | "dew" | "ember" | "mist" | "garden" | "dawn" | "forest";
@@ -44,11 +44,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-amber-400/40 bg-gradient-to-br from-amber-950/50 via-midnight-light to-midnight-light hover:border-amber-300/60",
-      pageGradient: "bg-gradient-to-b from-amber-950/80 via-[#1c1917] to-midnight",
+        "border-amber-200/90 bg-gradient-to-br from-amber-50 via-orange-50/70 to-white shadow-sm hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/60",
+      pageGradient:
+        "bg-gradient-to-b from-amber-50 via-orange-50/80 to-stone-50",
       quotePanel:
-        "border-amber-500/25 bg-amber-950/35 backdrop-blur-sm shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]",
-      accent: "text-amber-200",
+        "border-amber-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-amber-100/50",
+      accent: "text-amber-900",
       backdrop: "sun",
     },
   },
@@ -64,11 +65,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-sky-700/40 bg-gradient-to-br from-slate-900/90 via-indigo-950/40 to-midnight-light hover:border-sky-500/45",
-      pageGradient: "bg-gradient-to-b from-slate-950 via-indigo-950/70 to-midnight",
+        "border-sky-200/90 bg-gradient-to-br from-sky-50 via-indigo-50/50 to-white shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-100/70",
+      pageGradient:
+        "bg-gradient-to-b from-sky-100 via-indigo-50/90 to-stone-100",
       quotePanel:
-        "border-sky-600/20 bg-slate-900/50 backdrop-blur-sm shadow-[0_0_40px_-12px_rgba(56,189,248,0.15)]",
-      accent: "text-sky-200",
+        "border-sky-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-sky-100/60",
+      accent: "text-sky-900",
       backdrop: "dew",
     },
   },
@@ -90,11 +92,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-rose-900/50 bg-gradient-to-br from-rose-950/45 via-midnight-light to-midnight-light hover:border-rose-700/50",
-      pageGradient: "bg-gradient-to-b from-rose-950/60 via-[#2a1518] to-midnight",
+        "border-rose-200/90 bg-gradient-to-br from-rose-50 via-orange-50/40 to-white shadow-sm hover:border-rose-300 hover:shadow-md hover:shadow-rose-100/60",
+      pageGradient:
+        "bg-gradient-to-b from-rose-50 via-orange-50/60 to-stone-50",
       quotePanel:
-        "border-rose-800/25 bg-rose-950/30 backdrop-blur-sm shadow-[0_0_36px_-10px_rgba(244,63,94,0.12)]",
-      accent: "text-rose-200",
+        "border-rose-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-rose-100/50",
+      accent: "text-rose-900",
       backdrop: "ember",
     },
   },
@@ -110,11 +113,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-violet-800/45 bg-gradient-to-br from-violet-950/55 via-midnight-light to-midnight-light hover:border-violet-500/45",
-      pageGradient: "bg-gradient-to-b from-violet-950/75 via-[#1e1b2e] to-midnight",
+        "border-violet-200/90 bg-gradient-to-br from-violet-50 via-purple-50/50 to-white shadow-sm hover:border-violet-300 hover:shadow-md hover:shadow-violet-100/70",
+      pageGradient:
+        "bg-gradient-to-b from-violet-100 via-purple-50/80 to-stone-100",
       quotePanel:
-        "border-violet-500/20 bg-violet-950/35 backdrop-blur-sm shadow-[0_0_40px_-10px_rgba(167,139,250,0.2)]",
-      accent: "text-violet-200",
+        "border-violet-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-violet-100/60",
+      accent: "text-violet-900",
       backdrop: "mist",
     },
   },
@@ -130,11 +134,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-emerald-800/40 bg-gradient-to-br from-emerald-950/50 via-midnight-light to-midnight-light hover:border-emerald-500/45",
-      pageGradient: "bg-gradient-to-b from-emerald-950/65 via-[#14221c] to-midnight",
+        "border-emerald-200/90 bg-gradient-to-br from-emerald-50 via-teal-50/50 to-white shadow-sm hover:border-emerald-300 hover:shadow-md hover:shadow-emerald-100/60",
+      pageGradient:
+        "bg-gradient-to-b from-emerald-50 via-teal-50/70 to-stone-50",
       quotePanel:
-        "border-emerald-600/20 bg-emerald-950/35 backdrop-blur-sm shadow-[0_0_40px_-10px_rgba(52,211,153,0.15)]",
-      accent: "text-emerald-200",
+        "border-emerald-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-emerald-100/50",
+      accent: "text-emerald-900",
       backdrop: "garden",
     },
   },
@@ -150,11 +155,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-teal-600/35 bg-gradient-to-br from-teal-950/55 via-cyan-950/25 to-midnight-light hover:border-teal-400/45",
-      pageGradient: "bg-gradient-to-b from-teal-950/70 via-cyan-950/30 to-midnight",
+        "border-cyan-200/90 bg-gradient-to-br from-cyan-50 via-sky-50/60 to-white shadow-sm hover:border-cyan-300 hover:shadow-md hover:shadow-cyan-100/60",
+      pageGradient:
+        "bg-gradient-to-b from-cyan-100 via-sky-50/85 to-stone-100",
       quotePanel:
-        "border-teal-500/25 bg-teal-950/35 backdrop-blur-sm shadow-[0_0_42px_-8px_rgba(45,212,191,0.2)]",
-      accent: "text-teal-200",
+        "border-cyan-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-cyan-100/50",
+      accent: "text-teal-900",
       backdrop: "dawn",
     },
   },
@@ -170,11 +176,12 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     ],
     theme: {
       hubCard:
-        "border-green-800/40 bg-gradient-to-br from-green-950/55 via-midnight-light to-midnight-light hover:border-green-500/45",
-      pageGradient: "bg-gradient-to-b from-green-950/80 via-[#152018] to-midnight",
+        "border-green-200/90 bg-gradient-to-br from-green-50 via-lime-50/40 to-white shadow-sm hover:border-green-300 hover:shadow-md hover:shadow-green-100/60",
+      pageGradient:
+        "bg-gradient-to-b from-green-50 via-emerald-50/70 to-stone-50",
       quotePanel:
-        "border-green-600/20 bg-green-950/40 backdrop-blur-sm shadow-[0_0_48px_-12px_rgba(74,222,128,0.18)]",
-      accent: "text-green-200",
+        "border-green-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-green-100/50",
+      accent: "text-green-900",
       backdrop: "forest",
     },
   },

@@ -54,7 +54,7 @@ export default async function ReflectMoodPage({ params }: PageProps) {
               <article
                 className={`rounded-2xl border px-6 py-6 md:px-8 md:py-7 ${theme.quotePanel}`}
               >
-                <p className="text-foreground text-lg md:text-xl leading-relaxed font-serif">
+                <p className="text-foreground text-lg md:text-xl leading-relaxed">
                   &ldquo;{q.text}&rdquo;
                 </p>
                 <p className={`mt-4 text-sm font-medium ${theme.accent}`}>— {q.author}</p>
