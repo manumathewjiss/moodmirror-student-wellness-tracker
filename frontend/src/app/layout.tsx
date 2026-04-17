@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${cairo.variable} ${geistMono.variable} min-h-screen bg-midnight text-foreground antialiased`}
+        className={`${cairo.variable} ${geistMono.variable} min-h-screen text-foreground antialiased`}
       >
         <Nav />
         {children}

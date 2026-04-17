@@ -114,7 +114,7 @@ export default function HomePage() {
           <button
             className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors ${
               mode === "signup"
-                ? "bg-sunburst text-midnight"
+                ? "bg-sunburst text-ink"
                 : "text-foreground-muted hover:text-foreground"
             }`}
             onClick={() => setMode("signup")}
@@ -125,7 +125,7 @@ export default function HomePage() {
           <button
             className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors ${
               mode === "login"
-                ? "bg-sunburst text-midnight"
+                ? "bg-sunburst text-ink"
                 : "text-foreground-muted hover:text-foreground"
             }`}
             onClick={() => setMode("login")}
@@ -164,7 +164,7 @@ export default function HomePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-sunburst py-2.5 text-sm font-semibold text-midnight hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
+              className="w-full rounded-lg bg-sunburst py-2.5 text-sm font-semibold text-ink hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
             >
               {loading ? "Signing up..." : "Sign up"}
             </button>
@@ -187,7 +187,7 @@ export default function HomePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-sunburst py-2.5 text-sm font-semibold text-midnight hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
+              className="w-full rounded-lg bg-sunburst py-2.5 text-sm font-semibold text-ink hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
             >
               {loading ? "Logging in..." : "Log in"}
             </button>

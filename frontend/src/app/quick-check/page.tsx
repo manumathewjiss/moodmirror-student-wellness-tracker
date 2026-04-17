@@ -89,7 +89,7 @@ export default function QuickCheckPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-sunburst px-5 py-2.5 text-sm font-semibold text-midnight hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
+          className="rounded-lg bg-sunburst px-5 py-2.5 text-sm font-semibold text-ink hover:bg-sunburst-dark disabled:opacity-60 transition-colors"
         >
           {loading ? "Analyzing..." : "Analyze & save"}
         </button>

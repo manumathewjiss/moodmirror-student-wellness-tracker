@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Bright, pleasant gradient palette */
-  --midnight: #0f3d56;
-  --midnight-light: #1a6f8b;
-  --midnight-lighter: #2fa6c2;
-  --sunburst: #ffd166;
-  --sunburst-dark: #f4b942;
-  --foreground: #f8fdff;
-  --foreground-muted: #d6edf5;
+  /*
+   * Light “cream & white” theme. Names kept for Tailwind compatibility:
+   * midnight* = surfaces (nav, cards, inputs), not dark colors.
+   */
+  --midnight: #fff9f3;
+  --midnight-light: #ffffff;
+  --midnight-lighter: #e8dfd4;
+  --sunburst: #e8a84a;
+  --sunburst-dark: #d4923a;
+  --foreground: #1f2d33;
+  --foreground-muted: #5a7381;
+  /* Dark text on gold / yellow buttons */
+  --ink: #1a2529;
 }
 
 @theme inline {
@@ -19,15 +24,19 @@
   --color-sunburst-dark: var(--sunburst-dark);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
+  --color-ink: var(--ink);
   --font-sans: var(--font-cairo);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
+  min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 10%, #7ae7ff44 0%, transparent 35%),
-    radial-gradient(circle at 85% 0%, #ffd16633 0%, transparent 30%),
-    linear-gradient(180deg, #1b7ea4 0%, #145a7a 45%, #0f3d56 100%);
+    radial-gradient(ellipse 140% 100% at 50% -30%, #ffffff 0%, transparent 55%),
+    radial-gradient(circle at 12% 25%, #ffe8dc66 0%, transparent 42%),
+    radial-gradient(circle at 88% 15%, #e8f4ff88 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, #fff0e088 0%, transparent 45%),
+    linear-gradient(165deg, #fffefb 0%, #fff5eb 38%, #f7efe4 72%, #f0e8df 100%);
   color: var(--foreground);
   font-family: var(--font-cairo), system-ui, sans-serif;
 }
