@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  /*
-   * Light “cream & white” theme. Names kept for Tailwind compatibility:
-   * midnight* = surfaces (nav, cards, inputs), not dark colors.
-   */
-  --midnight: #fff9f3;
-  --midnight-light: #ffffff;
-  --midnight-lighter: #e8dfd4;
-  --sunburst: #e8a84a;
-  --sunburst-dark: #d4923a;
-  --foreground: #1f2d33;
-  --foreground-muted: #5a7381;
-  /* Dark text on gold / yellow buttons */
-  --ink: #1a2529;
+  /* Brand: deep navy + bright yellow (two-color UI) */
+  --navy: #0b1d33;
+  --yellow: #fcd116;
+  --midnight: var(--navy);
+  --midnight-light: #112536;
+  --midnight-lighter: #1e3a52;
+  --sunburst: var(--yellow);
+  --sunburst-dark: #e6bc10;
+  --foreground: #f8fafc;
+  --foreground-muted: rgba(248, 250, 252, 0.72);
+  /* Text on yellow buttons */
+  --ink: var(--navy);
 }
 
 @theme inline {
@@ -32,11 +31,8 @@
 body {
   min-height: 100vh;
   background:
-    radial-gradient(ellipse 140% 100% at 50% -30%, #ffffff 0%, transparent 55%),
-    radial-gradient(circle at 12% 25%, #ffe8dc66 0%, transparent 42%),
-    radial-gradient(circle at 88% 15%, #e8f4ff88 0%, transparent 40%),
-    radial-gradient(circle at 50% 100%, #fff0e088 0%, transparent 45%),
-    linear-gradient(165deg, #fffefb 0%, #fff5eb 38%, #f7efe4 72%, #f0e8df 100%);
+    radial-gradient(ellipse 120% 70% at 50% 100%, rgba(252, 209, 22, 0.14) 0%, transparent 50%),
+    linear-gradient(180deg, #0b1d33 0%, #081422 45%, #0b1d33 100%);
   color: var(--foreground);
   font-family: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
 }

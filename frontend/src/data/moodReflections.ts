@@ -16,7 +16,7 @@ export type MoodReflectionTheme = {
   pageGradient: string;
   /** Individual quote panels */
   quotePanel: string;
-  /** Accent for headings / links on detail (dark, readable on light) */
+  /** Accent for headings / links on detail */
   accent: string;
   /** Backdrop illustration variant */
   backdrop: "sun" | "dew" | "ember" | "mist" | "garden" | "dawn" | "forest";
@@ -31,6 +31,16 @@ export type MoodReflection = {
   theme: MoodReflectionTheme;
 };
 
+/** Navy + yellow only — matches global app palette */
+const navyYellow = {
+  hubCard:
+    "border border-sunburst/35 bg-midnight-light hover:border-sunburst/70 hover:shadow-lg hover:shadow-sunburst/15 transition",
+  pageGradient: "bg-gradient-to-b from-midnight via-midnight-light to-midnight",
+  quotePanel:
+    "border border-sunburst/30 bg-midnight-light/90 backdrop-blur-sm shadow-lg shadow-black/25",
+  accent: "text-sunburst",
+} as const;
+
 export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
   {
     slug: "happy",
@@ -42,16 +52,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
       { text: "Enjoy the little things in life.", author: "Robert Brault" },
     ],
-    theme: {
-      hubCard:
-        "border-amber-200/90 bg-gradient-to-br from-amber-50 via-orange-50/70 to-white shadow-sm hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/60",
-      pageGradient:
-        "bg-gradient-to-b from-amber-50 via-orange-50/80 to-stone-50",
-      quotePanel:
-        "border-amber-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-amber-100/50",
-      accent: "text-amber-900",
-      backdrop: "sun",
-    },
+    theme: { ...navyYellow, backdrop: "sun" },
   },
   {
     slug: "sad",
@@ -63,16 +64,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "Tears come from the heart, not from the brain.", author: "Leonardo da Vinci" },
       { text: "Every human walks around with a certain kind of sadness.", author: "Brad Pitt" },
     ],
-    theme: {
-      hubCard:
-        "border-sky-200/90 bg-gradient-to-br from-sky-50 via-indigo-50/50 to-white shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-100/70",
-      pageGradient:
-        "bg-gradient-to-b from-sky-100 via-indigo-50/90 to-stone-100",
-      quotePanel:
-        "border-sky-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-sky-100/60",
-      accent: "text-sky-900",
-      backdrop: "dew",
-    },
+    theme: { ...navyYellow, backdrop: "dew" },
   },
   {
     slug: "angry",
@@ -90,16 +82,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       },
       { text: "Holding onto anger is like drinking poison.", author: "Buddha" },
     ],
-    theme: {
-      hubCard:
-        "border-rose-200/90 bg-gradient-to-br from-rose-50 via-orange-50/40 to-white shadow-sm hover:border-rose-300 hover:shadow-md hover:shadow-rose-100/60",
-      pageGradient:
-        "bg-gradient-to-b from-rose-50 via-orange-50/60 to-stone-50",
-      quotePanel:
-        "border-rose-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-rose-100/50",
-      accent: "text-rose-900",
-      backdrop: "ember",
-    },
+    theme: { ...navyYellow, backdrop: "ember" },
   },
   {
     slug: "fearful",
@@ -111,16 +94,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "Fear is only as deep as the mind allows.", author: "Japanese Proverb" },
       { text: "Courage is resistance to fear, not absence of it.", author: "Mark Twain" },
     ],
-    theme: {
-      hubCard:
-        "border-violet-200/90 bg-gradient-to-br from-violet-50 via-purple-50/50 to-white shadow-sm hover:border-violet-300 hover:shadow-md hover:shadow-violet-100/70",
-      pageGradient:
-        "bg-gradient-to-b from-violet-100 via-purple-50/80 to-stone-100",
-      quotePanel:
-        "border-violet-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-violet-100/60",
-      accent: "text-violet-900",
-      backdrop: "mist",
-    },
+    theme: { ...navyYellow, backdrop: "mist" },
   },
   {
     slug: "disgusted",
@@ -132,16 +106,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
       { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
     ],
-    theme: {
-      hubCard:
-        "border-emerald-200/90 bg-gradient-to-br from-emerald-50 via-teal-50/50 to-white shadow-sm hover:border-emerald-300 hover:shadow-md hover:shadow-emerald-100/60",
-      pageGradient:
-        "bg-gradient-to-b from-emerald-50 via-teal-50/70 to-stone-50",
-      quotePanel:
-        "border-emerald-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-emerald-100/50",
-      accent: "text-emerald-900",
-      backdrop: "garden",
-    },
+    theme: { ...navyYellow, backdrop: "garden" },
   },
   {
     slug: "surprised",
@@ -153,16 +118,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "Expect the unexpected.", author: "Oscar Wilde" },
       { text: "The more you know, the more you realize you don't know.", author: "Socrates" },
     ],
-    theme: {
-      hubCard:
-        "border-cyan-200/90 bg-gradient-to-br from-cyan-50 via-sky-50/60 to-white shadow-sm hover:border-cyan-300 hover:shadow-md hover:shadow-cyan-100/60",
-      pageGradient:
-        "bg-gradient-to-b from-cyan-100 via-sky-50/85 to-stone-100",
-      quotePanel:
-        "border-cyan-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-cyan-100/50",
-      accent: "text-teal-900",
-      backdrop: "dawn",
-    },
+    theme: { ...navyYellow, backdrop: "dawn" },
   },
   {
     slug: "calm",
@@ -174,16 +130,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
       { text: "Nothing can bring you peace but yourself.", author: "Ralph Waldo Emerson" },
       { text: "Within you, there is a stillness and a sanctuary.", author: "Hermann Hesse" },
     ],
-    theme: {
-      hubCard:
-        "border-green-200/90 bg-gradient-to-br from-green-50 via-lime-50/40 to-white shadow-sm hover:border-green-300 hover:shadow-md hover:shadow-green-100/60",
-      pageGradient:
-        "bg-gradient-to-b from-green-50 via-emerald-50/70 to-stone-50",
-      quotePanel:
-        "border-green-200/70 bg-white/90 backdrop-blur-sm shadow-md shadow-green-100/50",
-      accent: "text-green-900",
-      backdrop: "forest",
-    },
+    theme: { ...navyYellow, backdrop: "forest" },
   },
 ] as const;
 
