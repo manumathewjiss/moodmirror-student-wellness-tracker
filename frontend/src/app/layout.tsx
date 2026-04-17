@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Cairo, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import Nav from "@/components/Nav";
 import "./globals.css";
 
-const cairo = Cairo({
-  variable: "--font-cairo",
-  subsets: ["latin", "arabic"],
-  weight: ["300", "400", "600", "700", "800"],
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${cairo.variable} ${geistMono.variable} min-h-screen text-foreground antialiased`}
+        className={`${plusJakartaSans.variable} ${geistMono.variable} min-h-screen font-sans text-foreground antialiased`}
       >
         <Nav />
         {children}

@@ -25,7 +25,7 @@
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
   --color-ink: var(--ink);
-  --font-sans: var(--font-cairo);
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -38,5 +38,5 @@ body {
     radial-gradient(circle at 50% 100%, #fff0e088 0%, transparent 45%),
     linear-gradient(165deg, #fffefb 0%, #fff5eb 38%, #f7efe4 72%, #f0e8df 100%);
   color: var(--foreground);
-  font-family: var(--font-cairo), system-ui, sans-serif;
+  font-family: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
