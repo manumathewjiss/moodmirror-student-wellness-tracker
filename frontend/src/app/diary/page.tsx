@@ -144,7 +144,7 @@ export default function DiaryPage() {
               </button>
             ))}
           </div>
-          <p className="mt-1.5 text-xs text-foreground-muted">😊 positive · 😐 neutral · 😔 negative — saves immediately, same as Generate diary and save.</p>
+          <p className="mt-1.5 text-xs text-foreground-muted">😊 positive · 😐 neutral · 😔 negative. Saves immediately, same as Generate diary and save.</p>
         </div>
         <div className="space-y-3">
           <span className="block text-sm font-medium text-foreground">Keywords / mood</span>

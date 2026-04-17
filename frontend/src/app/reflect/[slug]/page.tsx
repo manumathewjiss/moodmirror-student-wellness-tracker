@@ -57,7 +57,7 @@ export default async function ReflectMoodPage({ params }: PageProps) {
                 <p className="text-foreground text-lg md:text-xl leading-relaxed">
                   &ldquo;{q.text}&rdquo;
                 </p>
-                <p className={`mt-4 text-sm font-medium ${theme.accent}`}>— {q.author}</p>
+                <p className={`mt-4 text-sm font-medium ${theme.accent}`}>- {q.author}</p>
               </article>
             </li>
           ))}

@@ -16,7 +16,7 @@ export default function ReflectHubPage() {
           <h1 className="text-3xl font-bold text-foreground mb-2">Reflect</h1>
           <p className="text-foreground-muted text-sm max-w-xl">
             Choose how you feel right now. Each space has calming visuals and short quotes to help you pause,
-            breathe, and reflect—no logging required.
+            breathe, and reflect, no logging required.
           </p>
         </header>
 

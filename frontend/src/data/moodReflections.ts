@@ -70,7 +70,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     slug: "angry",
     label: "Angry",
     emoji: "🍃",
-    intro: "Space to breathe and soften—without judging the feeling.",
+    intro: "Space to breathe and soften, without judging the feeling.",
     quotes: [
       {
         text: "For every minute you are angry you lose sixty seconds of happiness.",
@@ -112,7 +112,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     slug: "surprised",
     label: "Surprised",
     emoji: "✨",
-    intro: "Life shifts quickly—these lines honor curiosity and wonder.",
+    intro: "Life shifts quickly. These lines honor curiosity and wonder.",
     quotes: [
       { text: "Life is full of surprises and serendipity.", author: "Maya Angelou" },
       { text: "Expect the unexpected.", author: "Oscar Wilde" },
@@ -124,7 +124,7 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     slug: "calm",
     label: "Calm",
     emoji: "🌲",
-    intro: "Stillness, trees, and breath—a quiet corner just for you.",
+    intro: "Stillness, trees, and breath. A quiet corner just for you.",
     quotes: [
       { text: "Peace comes from within.", author: "Buddha" },
       { text: "Nothing can bring you peace but yourself.", author: "Ralph Waldo Emerson" },
