@@ -98,7 +98,7 @@ def list_mood_entries(
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
 
-    limit = max(1, min(limit, 200))
+    limit = max(1, min(limit, 2000))
     entries = (
         db.query(MoodEntry)
         .filter(MoodEntry.user_id == user.id)
