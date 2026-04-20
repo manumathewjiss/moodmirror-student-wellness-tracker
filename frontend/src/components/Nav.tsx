@@ -83,6 +83,12 @@ export default function Nav() {
           >
             Reflect
           </Link>
+          <Link
+            href="/unwind"
+            className={`font-medium transition-colors ${pathname === "/unwind" ? "text-sunburst" : "text-foreground-muted hover:text-foreground"}`}
+          >
+            Unwind
+          </Link>
           {username && (
             <>
               <span className="rounded-full bg-midnight-light px-3 py-1 text-xs font-medium text-sunburst">

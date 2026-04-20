@@ -9,6 +9,7 @@ from app.api.routes.mood_entries import router as mood_entries_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.insights import router as insights_router
 from app.api.routes.speech import router as speech_router
+from app.api.routes.minigames import router as minigames_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_router)
     app.include_router(insights_router)
     app.include_router(speech_router)
+    app.include_router(minigames_router)
 
     return app
 

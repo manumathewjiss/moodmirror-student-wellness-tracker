@@ -54,6 +54,11 @@ export default function DashboardPage() {
       title: "Reflect",
       description: "Calming spaces by mood with quotes to help you pause and feel supported.",
     },
+    {
+      href: "/unwind",
+      title: "Unwind",
+      description: "Mini breaks — tic tac toe, reaction tap, odd one out, and coin flip with saved scores.",
+    },
   ];
 
   return (
