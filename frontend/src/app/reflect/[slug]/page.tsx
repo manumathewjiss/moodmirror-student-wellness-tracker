@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MOOD_SLUGS, getMoodReflection } from "@/data/moodReflections";
 import ReflectBackdrop from "@/components/ReflectBackdrop";
+import ReflectRelaxLinks from "@/components/ReflectRelaxLinks";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -27,7 +28,7 @@ export default async function ReflectMoodPage({ params }: PageProps) {
     notFound();
   }
 
-  const { theme, label, emoji, intro, quotes } = mood;
+  const { theme, label, emoji, intro, spotifyPlaylistUrl, youtubeVideoUrl, quotes } = mood;
 
   return (
     <div className={`relative min-h-[calc(100dvh-5rem)] overflow-hidden ${theme.pageGradient}`}>
@@ -47,6 +48,13 @@ export default async function ReflectMoodPage({ params }: PageProps) {
           <h1 className={`text-3xl font-bold tracking-tight ${theme.accent}`}>{label}</h1>
           <p className="text-foreground-muted text-sm mt-2 leading-relaxed max-w-lg">{intro}</p>
         </header>
+
+        <ReflectRelaxLinks
+          spotifyUrl={spotifyPlaylistUrl}
+          youtubeUrl={youtubeVideoUrl}
+          panelClass={theme.quotePanel}
+          accentClass={theme.accent}
+        />
 
         <ol className="space-y-5 list-none p-0 m-0">
           {quotes.map((q, index) => (

@@ -27,6 +27,10 @@ export type MoodReflection = {
   label: string;
   emoji: string;
   intro: string;
+  /** Curated Spotify playlist for this mood */
+  spotifyPlaylistUrl: string;
+  /** Motivational / speech-style video on YouTube */
+  youtubeVideoUrl: string;
   quotes: readonly MoodQuote[];
   theme: MoodReflectionTheme;
 };
@@ -47,6 +51,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Happy",
     emoji: "☀️",
     intro: "Let warmth and gratitude settle in for a moment.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/0jrlHA5UmxRxJjoykf7qRY?si=vyH5vMFVSB-d2uo3ir2H8w",
+    youtubeVideoUrl: "https://youtu.be/r4ZdyS6v3qA?si=1uvWN8ZgghzIshcC",
     quotes: [
       { text: "Happiness depends upon ourselves.", author: "Aristotle" },
       { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
@@ -59,6 +66,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Sad",
     emoji: "🌧️",
     intro: "It is okay to feel this. These words meet you where you are.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/25ZzkJkOuYir9kHr2CqwPQ?si=jup_qzM-SBON1sXMq7XL5Q",
+    youtubeVideoUrl: "https://youtu.be/0cwtNOq_k4w?si=LRqD3AA3zkVi7Fyq",
     quotes: [
       { text: "This too shall pass.", author: "Rumi" },
       { text: "Tears come from the heart, not from the brain.", author: "Leonardo da Vinci" },
@@ -71,6 +81,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Angry",
     emoji: "🍃",
     intro: "Space to breathe and soften, without judging the feeling.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/2joAU7ngDpwRwH2YPJc4z9?si=LJsvEcrERB6J_EBaZkMcRw",
+    youtubeVideoUrl: "https://youtu.be/BvdTLcpclxs?si=UxtOy6NrvFjB46gt",
     quotes: [
       {
         text: "For every minute you are angry you lose sixty seconds of happiness.",
@@ -89,6 +102,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Fearful",
     emoji: "🌫️",
     intro: "Fear can shrink when we name it and take one small step anyway.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/4kOdiP5gbzocwxQ8s2UTOF?si=A-VIUZxDQVyi0DamkSwslQ",
+    youtubeVideoUrl: "https://youtu.be/yFw7L7p7u5c?si=kEgv-7MQjvDCdK3u",
     quotes: [
       { text: "Do the thing you fear and the death of fear is certain.", author: "Ralph Waldo Emerson" },
       { text: "Fear is only as deep as the mind allows.", author: "Japanese Proverb" },
@@ -101,6 +117,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Disgusted",
     emoji: "🌿",
     intro: "Grounding perspectives when things feel heavy or off.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/6F0JjEHDSKY2e75SoOhBgj?si=twxjRE1YSQuRY_gad2FhuQ",
+    youtubeVideoUrl: "https://youtu.be/BFSiYojJnL8?si=GILofC67mQ_Up_lr",
     quotes: [
       { text: "You must not lose faith in humanity.", author: "Mahatma Gandhi" },
       { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
@@ -113,6 +132,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Surprised",
     emoji: "✨",
     intro: "Life shifts quickly. These lines honor curiosity and wonder.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/3uHoErCiHyFWZACXZe0zfS?si=1W7LDKDSRPGcyhYx1Hwtpw",
+    youtubeVideoUrl: "https://youtu.be/2OJ4dczhqNY?si=XJ4kYXuta8tuLDfE",
     quotes: [
       { text: "Life is full of surprises and serendipity.", author: "Maya Angelou" },
       { text: "Expect the unexpected.", author: "Oscar Wilde" },
@@ -125,6 +147,9 @@ export const MOOD_REFLECTIONS: readonly MoodReflection[] = [
     label: "Calm",
     emoji: "🌲",
     intro: "Stillness, trees, and breath. A quiet corner just for you.",
+    spotifyPlaylistUrl:
+      "https://open.spotify.com/playlist/1NIlouPwHi81SPIfHf213T?si=ZNAAsLQ0T3a0soOpvjKMSA",
+    youtubeVideoUrl: "https://youtu.be/L_vw4Nmiu5o?si=XbzVzNPYc_jnXTed",
     quotes: [
       { text: "Peace comes from within.", author: "Buddha" },
       { text: "Nothing can bring you peace but yourself.", author: "Ralph Waldo Emerson" },
