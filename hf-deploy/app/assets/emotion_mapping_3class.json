@@ -1,0 +1,12 @@
+{
+  "emotion_to_id": {
+    "negative": 0,
+    "neutral": 1,
+    "positive": 2
+  },
+  "id_to_emotion": {
+    "0": "negative",
+    "1": "neutral",
+    "2": "positive"
+  }
+}

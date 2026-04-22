@@ -1,0 +1,16 @@
+# Upload these files into the Overleaf "figures" folder (same names, .png)
+# The LaTeX report uses IfFileExists: once the file is present, the image shows.
+
+app-01-home.png
+app-02-dashboard.png
+app-03-quickcheck.png
+app-04-diary.png
+app-05-history.png
+app-06-insights-trend.png
+app-07-insights-calendar.png
+app-08-reflect-hub.png
+app-09-reflect-mood.png
+app-10-unwind.png
+legacy-01-streamlit.png
+legacy-02-confusion-3cl.png
+legacy-03-emotion-distribution.png

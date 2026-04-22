@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { getStoredUsername } from "@/lib/session";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
 type MoodResult = {
@@ -19,7 +21,7 @@ export default function QuickCheckPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setUsername(typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null);
+    setUsername(getStoredUsername());
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {

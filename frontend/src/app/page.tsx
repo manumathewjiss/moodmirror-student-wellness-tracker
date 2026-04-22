@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getStoredUsername, setStoredUsername } from "@/lib/session";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
@@ -32,7 +33,7 @@ export default function HomePage() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.localStorage.getItem("moodmirror_username")) {
+    if (getStoredUsername()) {
       router.replace("/dashboard");
     }
   }, [router]);
@@ -58,8 +59,7 @@ export default function HomePage() {
       }
       setCurrentUser(data);
       if (typeof window !== "undefined") {
-        window.localStorage.setItem("moodmirror_username", data.username);
-        window.dispatchEvent(new CustomEvent("moodmirror-user-changed"));
+        setStoredUsername(data.username);
       }
       router.push("/dashboard");
     } catch (err: any) {
@@ -91,8 +91,7 @@ export default function HomePage() {
       }
       setCurrentUser(data);
       if (typeof window !== "undefined") {
-        window.localStorage.setItem("moodmirror_username", data.username);
-        window.dispatchEvent(new CustomEvent("moodmirror-user-changed"));
+        setStoredUsername(data.username);
       }
       router.push("/dashboard");
     } catch (err: any) {
@@ -106,7 +105,7 @@ export default function HomePage() {
     <main className="min-h-screen flex items-center justify-center bg-midnight px-4 py-12">
       <div className="w-full max-w-md rounded-2xl border border-midnight-lighter bg-midnight-light p-8 shadow-xl">
         <h1 className="text-2xl font-bold text-center mb-2 text-foreground">
-          MoodMirror
+          AIMoodDiary
         </h1>
         <p className="text-foreground-muted text-sm text-center mb-6">Sign in</p>
 

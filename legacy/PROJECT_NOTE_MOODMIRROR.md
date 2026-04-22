@@ -1,6 +1,6 @@
-# MoodMirror Project: Complete Project Note
+# AIMoodDiary Project: Complete Project Note
 
-**Document Purpose:** A comprehensive, detailed note covering (1) the existing MoodMirror emotion detection project as implemented in this repository, and (2) the extended MoodMirror idea for student daily mood tracking with keyword-based diary generation and NLP emotion analysis. Every relevant detail from the codebase and from our discussions is included for reference, literature review, and future implementation.
+**Document Purpose:** A comprehensive, detailed note covering (1) the existing AIMoodDiary emotion detection project as implemented in this repository, and (2) the extended AIMoodDiary idea for student daily mood tracking with keyword-based diary generation and NLP emotion analysis. Every relevant detail from the codebase and from our discussions is included for reference, literature review, and future implementation.
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## 1. Project Overview
 
-**Project Name:** MoodMirror – Emotion Detection Project
+**Project Name:** AIMoodDiary – Emotion Detection Project
 
 **Description:** A comprehensive NLP project for emotion classification from text using transformer-based models and traditional machine learning. The project implements and compares multiple models for emotion detection and provides a Streamlit web application for real-time predictions and trend visualization.
 
@@ -183,7 +183,7 @@ The **RoBERTa 3-class** model is the best-performing and is used in the Streamli
 ### 7.3 deployment/emotion_app.py
 
 - **Stack:** Streamlit, Plotly.
-- **Page config:** Title "MoodMirror", icon 😊, layout centered, sidebar collapsed.
+- **Page config:** Title "AIMoodDiary", icon 😊, layout centered, sidebar collapsed.
 - **Styles:** CSS for main-header, prediction-box, emotion-positive (green), emotion-negative (red), emotion-neutral (yellow).
 - **@st.cache_resource load_model():** Calls `load_roberta_3class_predictor(base_path)` with base_path = project root; returns predictor or None.
 - **get_emotion_color(emotion):** Returns CSS class for positive/negative/neutral.
@@ -375,4 +375,4 @@ User Input (daily) → Dynamic Text Boxes (max 10/day) → Storage (JSON/SQLite)
 
 ---
 
-This note is intended as the single reference for both the **completed MoodMirror emotion detection project** and the **extended MoodMirror student mood tracker idea**, including every technical and conceptual detail discussed and present in the repository.
+This note is intended as the single reference for both the **completed AIMoodDiary emotion detection project** and the **extended AIMoodDiary student mood tracker idea**, including every technical and conceptual detail discussed and present in the repository.

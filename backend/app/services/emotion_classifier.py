@@ -20,7 +20,7 @@ class EmotionClassifier:
     def __init__(self, model_source: str, mapping_path: Path, max_length: int = 128) -> None:
         """
         model_source: either a local directory path or a HuggingFace Hub repo ID
-                      (e.g. "yourname/moodmirror-roberta").
+                      (e.g. "yourname/aimooddiary-roberta").
         """
         self.model_source = model_source
         self.mapping_path = mapping_path

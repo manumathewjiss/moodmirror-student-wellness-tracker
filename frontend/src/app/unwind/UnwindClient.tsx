@@ -7,6 +7,7 @@ import OddOneOutGame from "@/components/unwind/OddOneOutGame";
 import ReactionTapGame from "@/components/unwind/ReactionTapGame";
 import TicTacToeGame from "@/components/unwind/TicTacToeGame";
 import { fetchMinigameStats, type GameKey, type MinigameStatDTO } from "@/lib/minigameApi";
+import { getStoredUsername } from "@/lib/session";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
@@ -57,7 +58,7 @@ export default function UnwindClient() {
   const [statsError, setStatsError] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null;
+    const stored = getStoredUsername();
     setUsername(stored);
     if (typeof window !== "undefined" && !stored) {
       router.replace("/");

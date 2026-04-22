@@ -3,7 +3,7 @@ import { MOOD_REFLECTIONS } from "@/data/moodReflections";
 import ReflectBackdrop from "@/components/ReflectBackdrop";
 
 export const metadata = {
-  title: "Reflect | MoodMirror",
+  title: "Reflect | AIMoodDiary",
   description: "Gentle quotes and reflections tailored to how you feel.",
 };
 

@@ -1,4 +1,4 @@
-# MoodMirror - Emotion Detection Project
+# AIMoodDiary - Emotion Detection Project
 # Python Dependencies
 
 # ============================================================================

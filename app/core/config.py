@@ -18,9 +18,9 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:3000"
 
-    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/moodmirror"
+    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/aimooddiary"
 
-    # Set EMOTION_MODEL_HUB_ID to a HuggingFace Hub repo (e.g. "yourname/moodmirror-roberta")
+    # Set EMOTION_MODEL_HUB_ID to a HuggingFace Hub repo (e.g. "yourname/aimooddiary-roberta")
     # to load the model from the Hub instead of a local directory.
     emotion_model_hub_id: str | None = None
 

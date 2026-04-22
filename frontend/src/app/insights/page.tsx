@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { getStoredUsername } from "@/lib/session";
 import {
   LineChart,
   Line,
@@ -220,7 +221,7 @@ export default function InsightsPage() {
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null;
+    const stored = getStoredUsername();
     setUsername(stored);
     if (typeof window !== "undefined" && !stored) {
       router.replace("/");

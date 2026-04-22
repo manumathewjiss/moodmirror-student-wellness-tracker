@@ -1,4 +1,4 @@
-# MoodMirror - Emotion Detection Project
+# AIMoodDiary - Emotion Detection Project
 
 A comprehensive NLP project for emotion classification using transformer-based models and traditional machine learning approaches.
 

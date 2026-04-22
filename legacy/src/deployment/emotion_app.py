@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from src.model_inference import load_roberta_3class_predictor
 
 st.set_page_config(
-    page_title="MoodMirror",
+    page_title="AIMoodDiary",
     page_icon="😊",
     layout="centered",
     initial_sidebar_state="collapsed"
@@ -74,7 +74,7 @@ def get_emotion_value(emotion):
 
 def main():
     
-    st.markdown('<h1 class="main-header">😊 MoodMirror</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">😊 AIMoodDiary</h1>', unsafe_allow_html=True)
     st.markdown("---")
     
     predictor = load_model()

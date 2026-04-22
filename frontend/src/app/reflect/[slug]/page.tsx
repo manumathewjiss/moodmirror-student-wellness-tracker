@@ -13,9 +13,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const mood = getMoodReflection(slug);
-  if (!mood) return { title: "Reflect | MoodMirror" };
+  if (!mood) return { title: "Reflect | AIMoodDiary" };
   return {
-    title: `${mood.label} | Reflect | MoodMirror`,
+    title: `${mood.label} | Reflect | AIMoodDiary`,
     description: mood.intro,
   };
 }

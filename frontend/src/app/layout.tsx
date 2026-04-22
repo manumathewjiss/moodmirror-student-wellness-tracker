@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MoodMirror",
+  title: "AIMoodDiary",
   description: "Reflect on your mood with emotion-aware diary and quick check",
 };
 

@@ -19,7 +19,7 @@ def create_app() -> FastAPI:
     configure_logging(settings.log_level)
 
     app = FastAPI(
-        title="MoodMirror Backend",
+        title="AIMoodDiary Backend",
         version="0.1.0",
     )
 

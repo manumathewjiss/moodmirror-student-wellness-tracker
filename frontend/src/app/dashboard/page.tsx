@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getStoredUsername } from "@/lib/session";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null;
+    const stored = getStoredUsername();
     setUsername(stored);
     if (typeof window !== "undefined" && !stored) {
       router.replace("/");

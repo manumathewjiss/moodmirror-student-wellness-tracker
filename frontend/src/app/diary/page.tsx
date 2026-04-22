@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import DiaryVoiceButton from "@/components/DiaryVoiceButton";
+import { getStoredUsername } from "@/lib/session";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8001";
 
@@ -35,7 +36,7 @@ export default function DiaryPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setUsername(typeof window !== "undefined" ? window.localStorage.getItem("moodmirror_username") : null);
+    setUsername(getStoredUsername());
   }, []);
 
   function updateBox(index: number, value: string) {
